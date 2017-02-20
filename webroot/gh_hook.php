@@ -37,9 +37,10 @@ function git_current_branch ($cwd) {
 // cd ..
 // $cwd = dirname(__DIR__);
 // GitHub will hit us with POST (http://help.github.com/post-receive-hooks/)
-  mail('boyd111c@gmail.com', 'GitHub hook result', var_dump(json_decode($_POST['payload'])));
-if (!empty($_POST['payload'])) {
-  $payload = json_decode($_POST['payload']);
+$request_body = file_get_contents('php://input');
+
+if (!empty($request_body)) {
+  $payload = json_decode($request_body);
 
   // which branch was committed?
   $branch = substr($payload->ref, strrpos($payload->ref, '/') + 1);
@@ -71,9 +72,8 @@ if (!empty($_POST['payload'])) {
     $output .= PHP_EOL;
     $output .= $result;
     // send us the output
-    mail('root', 'GitHub hook `'.$cmd.'` result', $output);
-    mail('boyd111c@gmail.com', 'GitHub hook `'.$cmd.'` result', $output);
 
+    mail('boyd111c@gmail.com', 'GitHub hook `'.$cmd.'` result', $output);
     // if you use APC, especially if you use apc.stat=0, we should clear APC
     // if (apc_clear_cache('opcode') == false || apc_clear_cache('user') == false) {
     //   mail('root', 'Unable to apc_clear_cache', '');
