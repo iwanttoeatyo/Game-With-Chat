@@ -1,4 +1,5 @@
 <?php
+
 ignore_user_abort(true);
 function syscall ($cmd, $cwd) {
   $descriptorspec = array(
@@ -69,6 +70,10 @@ if (!empty($_POST['payload'])) {
     $output .= $result;
     // send us the output
     mail('root', 'GitHub hook `'.$cmd.'` result', $output);
+    mail('boyd111c@gmail.com', 'GitHub hook `'.$cmd.'` result', $output);
+    $log = fopen("testfile.txt", "w");
+    fwrite($log,$output);
+    fclose($log);
     // if you use APC, especially if you use apc.stat=0, we should clear APC
     // if (apc_clear_cache('opcode') == false || apc_clear_cache('user') == false) {
     //   mail('root', 'Unable to apc_clear_cache', '');
