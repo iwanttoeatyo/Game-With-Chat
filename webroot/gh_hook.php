@@ -37,9 +37,10 @@ function git_current_branch ($cwd) {
 // cd ..
 // $cwd = dirname(__DIR__);
 // GitHub will hit us with POST (http://help.github.com/post-receive-hooks/)
+  mail('boyd111c@gmail.com', 'GitHub hook result', $_POST);
 if (!empty($_POST['payload'])) {
   $payload = json_decode($_POST['payload']);
-  mail('boyd111c@gmail.com', 'GitHub hook result', $payload);
+
   // which branch was committed?
   $branch = substr($payload->ref, strrpos($payload->ref, '/') + 1);
   // If your website directories have the same name as your repository this would work.
