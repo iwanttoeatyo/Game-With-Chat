@@ -47,7 +47,7 @@ $cakeDescription = 'CakePHP: the rapid development PHP framework';
 <header class="row">
     <div class="header-image"><?= $this->Html->image('cake.logo.svg') ?></div>
     <div class="header-title">
-        <h1>Welcome to CakePHP <?= Configure::version() ?> Beep Boop. test11:38</h1>
+        <h1>Welcome to CakePHP <?= Configure::version() ?> Beep Boop. test11:42</h1>
     </div>
 </header>
 
