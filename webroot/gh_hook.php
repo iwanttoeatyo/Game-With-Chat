@@ -24,6 +24,13 @@ function git_current_branch ($cwd) {
     return $matches[1];
   }
 }
+
+function git_current_repository ($cwd) {
+    $result = syscall('git config --get remote.origin.url', $cwd);
+    if (preg_match('/\\/(?:(?!.*\\/))(.*)\\.git/',$result,$matches))
+        return strtolower($matches[1]);
+ }
+
 // make sure the request is coming from GitHub
 // https://help.github.com/articles/what-ip-addresses-does-github-use-that-i-should-whitelist
 /*
@@ -37,18 +44,18 @@ function git_current_branch ($cwd) {
 // cd ..
 // $cwd = dirname(__DIR__);
 // GitHub will hit us with POST (http://help.github.com/post-receive-hooks/)
-$request_body = file_get_contents('php://input');
 
-if (!empty($request_body)) {
-  $payload = json_decode($request_body);
+if (!empty($_POST['payload'])) {
+    $payload = json_decode($_POST['payload']);
 
   // which branch was committed?
   $branch = substr($payload->ref, strrpos($payload->ref, '/') + 1);
   // If your website directories have the same name as your repository this would work.
   $repository = $payload->repository->name;
+
   $cwd = '/var/www/'.$repository;
-  // only pull if we are on the same branch
-  if ($branch == git_current_branch($cwd)) {
+  // only pull if we are on the same branch and same repository
+  if ($repository == git_current_repository($cwd) && $branch == git_current_branch($cwd)  ) {
     // pull from $branch
     $cmd = sprintf('git pull origin %s', $branch);
     $result = syscall($cmd, $cwd);
