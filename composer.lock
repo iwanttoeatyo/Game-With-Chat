@@ -54,16 +54,16 @@
         },
         {
             "name": "cakephp/cakephp",
-            "version": "3.4.1",
+            "version": "3.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "f10036724d2aec1c306d07fea944022fd13e091f"
+                "reference": "28b6e2077d604d53b008c3fab38dbed2b4f98244"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/f10036724d2aec1c306d07fea944022fd13e091f",
-                "reference": "f10036724d2aec1c306d07fea944022fd13e091f",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/28b6e2077d604d53b008c3fab38dbed2b4f98244",
+                "reference": "28b6e2077d604d53b008c3fab38dbed2b4f98244",
                 "shasum": ""
             },
             "require": {
@@ -75,6 +75,9 @@
                 "php": ">=5.6.0",
                 "psr/log": "^1.0",
                 "zendframework/zend-diactoros": "~1.0"
+            },
+            "conflict": {
+                "phpunit/phpunit": "<5.7"
             },
             "replace": {
                 "cakephp/cache": "self.version",
@@ -107,8 +110,7 @@
                     "src/Core/functions.php",
                     "src/Collection/functions.php",
                     "src/I18n/functions.php",
-                    "src/Utility/bootstrap.php",
-                    "src/TestSuite/phpunit-forward-compat.php"
+                    "src/Utility/bootstrap.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -126,7 +128,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2017-02-18T03:18:31+00:00"
+            "time": "2017-02-23T03:23:11+00:00"
         },
         {
             "name": "cakephp/chronos",
@@ -993,26 +995,26 @@
     "packages-dev": [
         {
             "name": "cakephp/bake",
-            "version": "1.2.14",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/bake.git",
-                "reference": "24ef0cc781b529a8566cce4ecaf3aeaa1f08efd4"
+                "reference": "73fd850a031649d451e40b8ce5bba3b6ea7ac112"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/bake/zipball/24ef0cc781b529a8566cce4ecaf3aeaa1f08efd4",
-                "reference": "24ef0cc781b529a8566cce4ecaf3aeaa1f08efd4",
+                "url": "https://api.github.com/repos/cakephp/bake/zipball/73fd850a031649d451e40b8ce5bba3b6ea7ac112",
+                "reference": "73fd850a031649d451e40b8ce5bba3b6ea7ac112",
                 "shasum": ""
             },
             "require": {
-                "cakephp/cakephp": ">=3.2.0 <4.0.0",
+                "cakephp/cakephp": ">=3.4.0 <4.0.0",
                 "cakephp/plugin-installer": "*",
-                "php": ">=5.5.9"
+                "php": ">=5.6.0"
             },
             "require-dev": {
                 "cakephp/cakephp-codesniffer": "^2.1",
-                "phpunit/phpunit": "*"
+                "phpunit/phpunit": "~5.7 | ~6.0"
             },
             "type": "cakephp-plugin",
             "autoload": {
@@ -1036,7 +1038,7 @@
                 "bake",
                 "cakephp"
             ],
-            "time": "2017-01-31T00:59:03+00:00"
+            "time": "2017-02-22T03:20:52+00:00"
         },
         {
             "name": "cakephp/debug_kit",
