@@ -1,2 +1,0 @@
-This is garbage.
-I create it because github doesn't let me create an empty folder. I'll delete it later.
