@@ -288,15 +288,28 @@ a.latest-project-button {
     background: url(images/wood2.jpg); 
 }
 
-.chat{
-    position:relative;
-    float: right;
+.chat {
     width: 980px;
-    height:200px;
-    top: 25px;
-    border:2px solid #f68f25; 
-    overflow-x:scroll;
-    background: url(images/content.png) ; 
+    height: 200px;
+    background: url(images/chat-bg.jpg);
+    margin: 48px 0 0 0;
+    position: absolute;
+    top: 700px;
+}
+
+.chat ul {
+    padding: 25px;
+    list-style-type: none;
+    
+}
+
+.chat ul li {
+    margin-bottom: 10px;
+    line-height: 17px;
+}
+
+.chat ul li strong {
+    color: #caa45c;
 }
 
 
