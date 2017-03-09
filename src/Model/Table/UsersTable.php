@@ -30,7 +30,7 @@ class UsersTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('users');
+        $this->setTable('Users');
         $this->setDisplayField('id');
         $this->setPrimaryKey(['id', 'username']);
 		$this->addBehavior('Timestamp', [
