@@ -6,8 +6,8 @@ $this->layout = false;
 <html>
 <head>
 	<title>Home | URGame</title>
-	<?= $this->html->script('jquery-3.1.1.js') ?>
-	<?= $this->html->script('bootstrap.js') ?>
+	<?= $this->Html->script('jquery-3.1.1.js') ?>
+	<?= $this->Html->script('bootstrap.js') ?>
 	<?= $this->Html->css('bootstrap.css') ?>
 	<?= $this->Html->css('bootstrap-theme.css') ?>
 	<?= $this->Html->css('layout.css') ?>
@@ -21,9 +21,9 @@ $this->layout = false;
 			<a class="navbar-brand" href="#">URGame</a>
 		</div>
 		<ul class="nav navbar-nav navbar-right">
-			<li><a href="<?= $this->Url->build(['controller' => 'users' ,'action' => 'add']) ?>">
+			<li><a href="<?= $this->Url->build(['controller' => 'Users' ,'action' => 'add']) ?>">
 					<span class="glyphicon glyphicon-user"></span>  Register</a></li>
-			<li><a href="<?= $this->Url->build(['controller' => 'users' ,'action' => 'add']) ?>">
+			<li><a href="<?= $this->Url->build(['controller' => 'Users' ,'action' => 'add']) ?>">
 					<span class="glyphicon glyphicon-log-in"></span>  Login</a></li>
 		</ul>
 	</div>
