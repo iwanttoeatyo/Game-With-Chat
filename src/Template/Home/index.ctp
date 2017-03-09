@@ -21,9 +21,9 @@ $this->layout = false;
 			<a class="navbar-brand" href="#">URGame</a>
 		</div>
 		<ul class="nav navbar-nav navbar-right">
-			<li><a href="<?= $this->Url->build(['controller' => 'users' ,'action' => 'add']) ?>">
+			<li><a href="<?= $this->Url->build(['controller' => 'Users' ,'action' => 'add']) ?>">
 					<span class="glyphicon glyphicon-user"></span>  Register</a></li>
-			<li><a href="<?= $this->Url->build(['controller' => 'users' ,'action' => 'add']) ?>">
+			<li><a href="<?= $this->Url->build(['controller' => 'Users' ,'action' => 'add']) ?>">
 					<span class="glyphicon glyphicon-log-in"></span>  Login</a></li>
 		</ul>
 	</div>
