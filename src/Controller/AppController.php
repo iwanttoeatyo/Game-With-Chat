@@ -28,6 +28,12 @@ use Cake\Event\Event;
 class AppController extends Controller
 {
 
+
+	public function beforeFilter(Event $event)
+	{
+		parent::beforeFilter($event);
+		$this->Auth->allow();
+	}
     /**
      * Initialization hook method.
      *
@@ -43,7 +49,11 @@ class AppController extends Controller
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
-
+		$this->loadComponent('Auth', [
+			'authorize' => 'Controller',
+			'loginAction' => ['controller' => 'Users', 'action' => 'login']
+		]);
+		$this->loadComponent('Cookie', ['expiry' => '1 day']);
         /*
          * Enable the following components for recommended CakePHP security settings.
          * see http://book.cakephp.org/3.0/en/controllers/components/security.html

@@ -220,3 +220,8 @@ Type::build('timestamp')
 if (Configure::read('debug')) {
     Plugin::load('DebugKit', ['bootstrap' => true]);
 }
+
+
+Configure::write('Session', [
+    'defaults' => 'cache'
+]);
