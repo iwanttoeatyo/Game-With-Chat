@@ -23,12 +23,6 @@ class User extends Entity
 		}
 	}
 
-	protected function _setEncryptedPassword($encryptedPassword)
-	{
-		if (strlen($encryptedPassword) > 0) {
-			return (new DefaultPasswordHasher)->hash($encryptedPassword);
-		}
-	}
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

@@ -66,8 +66,8 @@ class UsersTable extends Table
             ->add('email', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
-            ->requirePresence('encryptedPassword', 'create')
-            ->notEmpty('encryptedPassword');
+            ->requirePresence('password', 'create')
+            ->notEmpty('password');
 
         return $validator;
     }
