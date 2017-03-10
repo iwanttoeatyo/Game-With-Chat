@@ -15,6 +15,7 @@
 namespace App\Controller;
 
 use Cake\Controller\Controller;
+use Cake\Core\Configure;
 use Cake\Event\Event;
 
 /**
@@ -33,6 +34,7 @@ class AppController extends Controller
 	{
 		parent::beforeFilter($event);
 		$this->Auth->allow();
+
 	}
     /**
      * Initialization hook method.
@@ -46,20 +48,33 @@ class AppController extends Controller
     public function initialize()
     {
         parent::initialize();
-
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
 		$this->loadComponent('Auth', [
-			'authorize' => 'Controller',
-			'loginAction' => ['controller' => 'Users', 'action' => 'login']
+			'authorize', ['Controller'],
+			'loginAction' => ['controller' => 'Users', 'action' => 'login'],
+			'loginRedirect' => ['controller' => 'Home',	'action' => 'index'],
+			'logoutRedirect' => ['controller' => 'Home','action' => 'index'],
+			'authError' => 'Auth error. This shouldn\'t happen',
+			'authenticate' => [
+				'Form' => [
+					'fields' => [
+						'username' => 'username',
+						'password' => 'password'
+					]
+				]
+			]
 		]);
 		$this->loadComponent('Cookie', ['expiry' => '1 day']);
+
+
         /*
          * Enable the following components for recommended CakePHP security settings.
          * see http://book.cakephp.org/3.0/en/controllers/components/security.html
          */
         //$this->loadComponent('Security');
         //$this->loadComponent('Csrf');
+
     }
 
     /**
@@ -75,5 +90,19 @@ class AppController extends Controller
         ) {
             $this->set('_serialize', true);
         }
+
+        //Global values for template pages
+		$this->set('app_name', Configure::read('App.Name'));
     }
+
+	public function isAuthorized($user)
+	{
+		// Admin can access every action
+		if ($user) {
+			return true;
+		}
+
+		// Default deny
+		return false;
+	}
 }

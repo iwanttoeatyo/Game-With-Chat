@@ -225,3 +225,5 @@ if (Configure::read('debug')) {
 Configure::write('Session', [
     'defaults' => 'cache'
 ]);
+
+Configure::write('App.Name','URGame');

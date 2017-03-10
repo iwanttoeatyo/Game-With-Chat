@@ -1,35 +1,7 @@
 <?php
-$this->layout = false;
+$app_name = 'testappname';
+$title = 'URGame';
 ?>
-
-<!doctype html>
-<html>
-<head>
-	<title>Home | URGame</title>
-	<?= $this->Html->script('jquery-3.1.1.js') ?>
-	<?= $this->Html->script('bootstrap.js') ?>
-	<?= $this->Html->css('bootstrap.css') ?>
-	<?= $this->Html->css('bootstrap-theme.css') ?>
-	<?= $this->Html->css('layout.css') ?>
-</head>
-
-<body>
-
-<nav class="navbar navbar-inverse">
-	<div class="container-fluid">
-		<div class="navbar-header ">
-			<a class="navbar-brand" href="#">URGame</a>
-		</div>
-		<ul class="nav navbar-nav navbar-right">
-			<li><a href="<?= $this->Url->build(['controller' => 'Users' ,'action' => 'add']) ?>">
-					<span class="glyphicon glyphicon-user"></span>  Register</a></li>
-			<li><a href="<?= $this->Url->build(['controller' => 'Users' ,'action' => 'login']) ?>">
-					<span class="glyphicon glyphicon-log-in"></span>  Login</a></li>
-		</ul>
-	</div>
-</nav>
-
-<div class="container">
 
 	<div class="col-xs-12 top-container no-padding">
 		<div class="col-xs-4 fill placeholder no-padding">
@@ -92,52 +64,5 @@ $this->layout = false;
 		</div>
 	</div>
 	<div class="col-xs-12 bottom-container no-padding ">
-		<div class="chat-container fill">
-			<div class="list-group-container">
-				<ul class="list-group">
-					<li class="list-group-item message"><span class="username">Name:</span> asglkjsdglksjdglaksjdg sdg </li>
-					<li class="list-group-item message">
-						<p><span class="username">Name:</span> asglkjsdg lksdglksdglksdglksdg lksdglksdglks dglksdglksdglk sdglksdglksdglksdglksdgl
-							ksdglksdglkdglks dglksdglksd glksdglksdglkssdglksdglksd glksdglksdglksdglksdgl ksjdglaksjdg
-							ksdglksdglkssdglksdglksd glksdglksdglksdglksdgl ksjdglaksjdg
-							ksdglksdglkssdglksdglksd glksdglksdglksdglksdgl ksjdglaksjdg
-							sdg </p>
-					</li>
-					<li class="list-group-item message"><span class="username">Name:</span> asglkjsdglksjdglaksjdg sdg </li>
-					<li class="list-group-item message"><span class="username">Name:</span> asglkjsdglksjdglaksjdg sdg </li>
-					<li class="list-group-item message"><span class="username">Name:</span> asglkjsdglksjdglaksjdg sdg </li>
-					<li class="list-group-item message"><span class="username">Name:</span> asglkjsdglksjdglaksjdg sdg </li>
-					<li class="list-group-item message"><span class="username">Name:</span> asglkjsdglksjdglaksjdg sdg </li>
-					<li class="list-group-item message">
-						<p><span class="username">Name:</span> asglkjsdg lksdglksdglksdglksdg lksdglksdglks dglksdglksdglk sdglksdglksdglksdglksdgl
-							ksdglksdglkdglks dglksdglksd glksdglksdglkssdglksdglksd glksdglksdglksdglksdgl ksjdglaksjdg
-							ksdglksdglkssdglksdglksd glksdglksdglksdglksdgl ksjdglaksjdg
-							ksdglksdglkssdglksdglksd glksdglksdglksdglksdgl ksjdglaksjdg
-							sdg </p>
-					</li>
-					<li class="list-group-item message"><span class="username">Name:</span> asglkjsdglksjdglaksjdg sdg </li>
-					<li class="list-group-item message"><span class="username">Name:</span> asglkjsdglksjdglaksjdg sdg </li>
-					<li class="list-group-item message"><span class="username">Name:</span> asglkjsdglksjdglaksjdg sdg </li>
-					<li class="list-group-item message"><span class="username">Name:</span> asglkjsdglksjdglaksjdg sdg </li>
-					<li class="list-group-item message">
-						<p><span class="username">Name:</span> asglkjsdg lksdglksdglksdglksdg lksdglksdglks dglksdglksdglk sdglksdglksdglksdglksdgl
-							ksdglksdglkdglks dglksdglksd glksdglksdglkssdglksdglksd glksdglksdglksdglksdgl ksjdglaksjdg
-							ksdglksdglkssdglksdglksd glksdglksdglksdglksdgl ksjdglaksjdg
-							ksdglksdglkssdglksdglksd glksdglksdglksdglksdgl ksjdglaksjdg
-							sdg </p>
-					</li>
-				</ul>
-			</div>
-			<div class="message-box input-group">
-				<input class="form-control" type="text" placeholder="Type a message">
-				<span class="input-group-addon chat-box-btn">
-           <button type="submit" class="btn btn-primary">Send </button>
-    </span>
-			</div>
-		</div>
+		<?=$this->element('chat')?>
 	</div>
-</div>
-
-
-</body>
-</html>

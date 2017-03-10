@@ -22,6 +22,8 @@ class HomeController extends AppController
      */
     public function index()
     {
+    	$title = '';
+    	$this->set(compact('title'));
 		$this->render('index');
     }
 

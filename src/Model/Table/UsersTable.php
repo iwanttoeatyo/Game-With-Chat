@@ -50,28 +50,24 @@ class UsersTable extends Table
      */
     public function validationDefault(Validator $validator)
     {
-//        $validator
-//            ->integer('id')
-//            ->allowEmpty('id', 'create');
-//
-//        $validator
-//            ->allowEmpty('username', 'create')
-//            ->add('username', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
-//
-//        $validator
-//            ->email('email')
-//            ->requirePresence('email', 'create')
-//            ->notEmpty('email')
-//            ->add('email', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
-//
-//        $validator
-//            ->requirePresence('encryptedPassword', 'create')
-//            ->notEmpty('encryptedPassword');
-//
-//        $validator
-//            ->dateTime('createdDate')
-//            ->requirePresence('createdDate', 'create')
-//            ->notEmpty('createdDate');
+        $validator
+            ->integer('id')
+            ->allowEmpty('id', 'create');
+
+        $validator
+			->requirePresence('username', 'create')
+			->notEmpty('username')
+            ->add('username', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+
+        $validator
+            ->email('email')
+            ->requirePresence('email', 'create')
+            ->notEmpty('email')
+            ->add('email', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+
+        $validator
+            ->requirePresence('encryptedPassword', 'create')
+            ->notEmpty('encryptedPassword');
 
         return $validator;
     }
