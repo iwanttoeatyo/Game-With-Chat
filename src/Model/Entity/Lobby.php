@@ -1,27 +1,28 @@
 <?php
 namespace App\Model\Entity;
 
-use Cake\Auth\DefaultPasswordHasher;
 use Cake\ORM\Entity;
 
 /**
- * User Entity
+ * Lobby Entity
  *
  * @property int $id
- * @property string $username
- * @property string $email
- * @property string $password
+ * @property string $name
+ * @property int $lobby_status_id
+ * @property int $player1_user_id
+ * @property int $player2_user_id
+ * @property int $chat_id
  * @property \Cake\I18n\Time $created_date
+ * @property bool $is_locked
+ *
+ * @property \App\Model\Entity\LobbyStatus $lobby_status
+ * @property \App\Model\Entity\User $player1
+ * @property \App\Model\Entity\User $player2
+ * @property \App\Model\Entity\Chat $chat
+ * @property \App\Model\Entity\Game[] $games
  */
-class User extends Entity
+class Lobby extends Entity
 {
-
-	protected function _setPassword($password)
-	{
-		if (strlen($password) > 0) {
-			return (new DefaultPasswordHasher)->hash($password);
-		}
-	}
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -34,6 +35,6 @@ class User extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'id' => false,
+        'id' => false
     ];
 }
