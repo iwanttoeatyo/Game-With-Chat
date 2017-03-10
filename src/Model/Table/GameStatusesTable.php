@@ -32,7 +32,7 @@ class GameStatusesTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('game_statuses');
+        $this->setTable('Game_Statuses');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 

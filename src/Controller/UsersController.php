@@ -35,7 +35,6 @@ class UsersController extends AppController
 		if ($this->request->is('post')) {
 			// Important: Use login() without arguments! See warning below.
 			$user = $this->Auth->identify();
-			debug($user);
 			if ($user) {
 				$this->Auth->setUser($user);
 				return $this->redirect($this->Auth->redirectUrl());

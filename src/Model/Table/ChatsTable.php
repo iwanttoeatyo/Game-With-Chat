@@ -33,7 +33,7 @@ class ChatsTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('chats');
+        $this->setTable('Chats');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 

@@ -32,7 +32,7 @@ class MessagesTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('messages');
+        $this->setTable('Messages');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 

@@ -32,7 +32,7 @@ class LobbyStatusesTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('lobby_statuses');
+        $this->setTable('Lobby_Statuses');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 

@@ -32,7 +32,7 @@ class ScoresTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('scores');
+        $this->setTable('Scores');
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',

@@ -36,7 +36,7 @@ class LobbiesTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('lobbies');
+        $this->setTable('Lobbies');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
