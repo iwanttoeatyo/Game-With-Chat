@@ -10,7 +10,7 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property string $username
  * @property string $email
- * @property string $encryptedPassword
+ * @property string $password
  * @property \Cake\I18n\Time $createdDate
  */
 class User extends Entity
