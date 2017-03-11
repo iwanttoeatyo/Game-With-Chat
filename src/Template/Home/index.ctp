@@ -1,6 +1,7 @@
 <?php
 $app_name = 'testappname';
 $title = 'URGame';
+
 ?>
 
 	<div class="col-xs-12 top-container no-padding">
@@ -15,18 +16,20 @@ $title = 'URGame';
 				<div class="list-group-container">
 
 					<ul class="list-group">
-						<li class="list-group-item">Lobby #5<span class="badge btn-success">Game Started</span></li>
-						<li class="list-group-item">Lobby #6<span class="badge btn-danger">Lobby 2/2</span></li>
-						<li class="list-group-item">Lobby #7<span class="badge btn-danger">Lobby 2/2</span></li>
-						<li class="list-group-item">Lobby #8<span class="badge btn-primary">Lobby 1/2</span></li>
-						<li class="list-group-item">Lobby #9<span class="badge btn-primary">Lobby 1/2</span></li>
-						<li class="list-group-item">Lobby #10<span class="badge btn-primary">Lobby 1/2</span></li>
-						<li class="list-group-item">Lobby #11<span class="badge btn-primary">Lobby 1/2</span></li>
-						<li class="list-group-item">Lobby #12<span class="badge btn-primary">Lobby 1/2</span></li>
-						<li class="list-group-item">Lobby #13<span class="badge btn-primary">Lobby 1/2</span></li>
-						<li class="list-group-item">Lobby #13<span class="badge btn-primary">Lobby 1/2</span></li>
-						<li class="list-group-item">Lobby #13<span class="badge btn-primary">Lobby 1/2</span></li>
-						<li class="list-group-item">Lobby #13<span class="badge btn-primary">Lobby 1/2</span></li>
+			  <?php foreach ($lobbies as $lobby):?>
+						<?php $status = $lobby->lobby_status->lobby_status ?>
+						<li lobby-id="<?=h($lobby->id)?>" class="list-group-item"><?=h($lobby->name)?>
+							<span class="badge
+							<?php if ( $status == "Open") : ?>
+							btn-success
+							<?php  elseif ( $status == "Started") : ?>
+							btn-primary
+							<?php  else :?>
+							btn-danger
+							<?php  endif;?>
+							"><?=h($lobby->lobby_status->lobby_status)?></span>
+						</li>
+			  <?php endforeach; ?>
 					</ul>
 				</div>
 
@@ -64,5 +67,5 @@ $title = 'URGame';
 		</div>
 	</div>
 	<div class="col-xs-12 bottom-container no-padding ">
-		<?=$this->element('chat')?>
+		<?=$this->element('chat', array('messages' => $messages))?>
 	</div>
