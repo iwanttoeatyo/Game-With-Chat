@@ -11,8 +11,11 @@ $(function () {
 		GAME : 3
 	};
 
+	//HTTPS for Server
 	var conn = new WebSocket('wss://' + document.domain + '/socket/');
+	//Regular for local dev
 	//var conn = new WebSocket('ws://' + document.domain + ':2020');
+
 
 	var chat_id = $('#chat-id').val();
 	var lobby_id = $('#lobby-id').val();
@@ -39,11 +42,16 @@ $(function () {
 		scrollDownChat();
 	});
 
+	conn.onerror=function(e){
+		addChatMessage({username:'*System', message: 'Can\'t connect to the server.'});
+	}
+
+
 	conn.onopen = function (e) {
 		console.log("Connection established!");
 		console.log(JSON.stringify({command: "joinChat", player_status: player_status, chat_id: chat_id, user_id: user_id}));
-			conn.send(JSON.stringify({command: "joinChat", player_status: player_status, chat_id: chat_id, user_id: user_id}));
-
+		conn.send(JSON.stringify({command: "joinChat", player_status: player_status, chat_id: chat_id, user_id: user_id}));
+		addChatMessage({username:'*System', message: 'You have connected to the server.'});
 	};
 
 	conn.onmessage = function (e) {
@@ -118,6 +126,7 @@ $(function () {
 	}
 
 	function addChatMessage(data){
+		console.log(data);
 		var $usernameDiv = $('<span class="username"/>')
 				.text(data.username + ": ")
 				.css('color', getUsernameColor(data.username));
