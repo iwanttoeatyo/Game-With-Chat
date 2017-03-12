@@ -40,7 +40,7 @@ class WebSocketController extends AppController implements MessageComponentInter
 
 	public function onMessage(ConnectionInterface $conn, $msg) {
 		$data = json_decode($msg);
-		echo $data;
+		echo dump($data);
 		switch ($data->command) {
 			case "joinChat":
 				//key = users connection id, value = chat_id
