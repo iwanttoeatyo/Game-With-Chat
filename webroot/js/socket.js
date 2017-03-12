@@ -11,7 +11,7 @@ $(function () {
 		GAME : 3
 	};
 
-	var conn = new WebSocket('ws://' + document.domain + ':2020');
+	var conn = new WebSocket('wss://' + document.domain + ':2020');
 	var chat_id = $('#chat-id').val();
 	var lobby_id = $('#lobby-id').val();
 	var game_id = $('#game-id').val();
