@@ -12,9 +12,15 @@ use Cake\ORM\Entity;
  * @property string $email
  * @property string $password
  * @property \Cake\I18n\Time $created_date
+ * @property int $player_status_id
+ *
+ * @property \App\Model\Entity\PlayerStatus $player_status
+ * @property \App\Model\Entity\Lobby $lobby_as_player1
+ * @property \App\Model\Entity\Lobby $lobby_as_player2
  */
 class User extends Entity
 {
+
 
 	protected function _setPassword($password)
 	{
@@ -23,7 +29,7 @@ class User extends Entity
 		}
 	}
 
-    /**
+	/**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
      * Note that when '*' is set to true, this allows all unspecified fields to
@@ -35,5 +41,14 @@ class User extends Entity
     protected $_accessible = [
         '*' => true,
         'id' => false,
+    ];
+
+    /**
+     * Fields that are excluded from JSON versions of the entity.
+     *
+     * @var array
+     */
+    protected $_hidden = [
+        'password'
     ];
 }

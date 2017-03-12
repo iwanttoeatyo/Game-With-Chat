@@ -10,10 +10,10 @@ use Cake\Validation\Validator;
  * Lobbies Model
  *
  * @property \Cake\ORM\Association\BelongsTo $LobbyStatuses
- * @property \Cake\ORM\Association\BelongsTo $Player1Users
- * @property \Cake\ORM\Association\BelongsTo $Player2Users
+ * @property \Cake\ORM\Association\BelongsTo Player1
+ * @property \Cake\ORM\Association\BelongsTo Player2
  * @property \Cake\ORM\Association\BelongsTo $Chats
- * @property \Cake\ORM\Association\HasMany $Games
+ * @property \Cake\ORM\Association\HasOne $Games
  *
  * @method \App\Model\Entity\Lobby get($primaryKey, $options = [])
  * @method \App\Model\Entity\Lobby newEntity($data = null, array $options = [])

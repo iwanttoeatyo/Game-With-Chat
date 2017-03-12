@@ -4,16 +4,19 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Chat Entity
+ * PlayerStatus Entity
  *
  * @property int $id
+ * @property string $player_status
  *
- * @property \App\Model\Entity\Message[] $messages
- * @property \App\Model\Entity\Lobby[] $lobbies
+ * @property \App\Model\Entity\User[] $users
  */
-class Chat extends Entity
+class PlayerStatus extends Entity
 {
-
+	const Offline = 0;
+	const Global = 1;
+	const Lobby = 2;
+	const Game = 3;
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

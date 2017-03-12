@@ -9,6 +9,8 @@ use Cake\Validation\Validator;
 /**
  * Users Model
  *
+ * @property \Cake\ORM\Association\BelongsTo $PlayerStatuses
+ *
  * @method \App\Model\Entity\User get($primaryKey, $options = [])
  * @method \App\Model\Entity\User newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\User[] newEntities(array $data, array $options = [])
@@ -20,19 +22,25 @@ use Cake\Validation\Validator;
 class UsersTable extends Table
 {
 
-    /**
-     * Initialize method
-     *
-     * @param array $config The configuration for the Table.
-     * @return void
-     */
-    public function initialize(array $config)
-    {
-        parent::initialize($config);
+	/**
+	 * Initialize method
+	 *
+	 * @param array $config The configuration for the Table.
+	 * @return void
+	 */
+	public function initialize(array $config)
+	{
+		parent::initialize($config);
 
-        $this->setTable('Users');
-        $this->setDisplayField('id');
-        $this->setPrimaryKey(['id', 'username']);
+		$this->setTable('Users');
+		$this->setDisplayField('id');
+		$this->setPrimaryKey('id');
+
+		$this->belongsTo('PlayerStatuses', [
+			'foreignKey' => 'player_status_id',
+			'joinType' => 'INNER'
+		]);
+
 		$this->addBehavior('Timestamp', [
 			'events' => [
 				'Model.beforeSave' => [
@@ -40,50 +48,61 @@ class UsersTable extends Table
 				]
 			]
 		]);
-    }
+	}
 
-    /**
-     * Default validation rules.
-     *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
-     */
-    public function validationDefault(Validator $validator)
-    {
-        $validator
-            ->integer('id')
-            ->allowEmpty('id', 'create');
+	/**
+	 * Default validation rules.
+	 *
+	 * @param \Cake\Validation\Validator $validator Validator instance.
+	 * @return \Cake\Validation\Validator
+	 */
+	public function validationDefault(Validator $validator)
+	{
+		$validator
+			->integer('id')
+			->allowEmpty('id', 'create');
 
-        $validator
+		$validator
 			->requirePresence('username', 'create')
 			->notEmpty('username')
-            ->add('username', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+			->add('username', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
-        $validator
-            ->email('email')
-            ->requirePresence('email', 'create')
-            ->notEmpty('email')
-            ->add('email', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+		$validator
+			->email('email')
+			->requirePresence('email', 'create')
+			->notEmpty('email')
+			->add('email', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
-        $validator
-            ->requirePresence('password', 'create')
-            ->notEmpty('password');
+		$validator
+			->requirePresence('password', 'create')
+			->notEmpty('password');
 
-        return $validator;
-    }
+		$validator
+			->requirePresence('password_confirm', 'create')
+			->notEmpty('password_confirm')
+			->add('password_confirm', 'custom', [
+				'rule' => function ($value, $context) {
+				return $value == $context['data']['password'];
+				},
+				'message' => 'Passwords must be the same'
+			]);
 
-    /**
-     * Returns a rules checker object that will be used for validating
-     * application integrity.
-     *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
-     */
-    public function buildRules(RulesChecker $rules)
-    {
-        $rules->add($rules->isUnique(['username']));
-        $rules->add($rules->isUnique(['email']));
+		return $validator;
+	}
 
-        return $rules;
-    }
+	/**
+	 * Returns a rules checker object that will be used for validating
+	 * application integrity.
+	 *
+	 * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+	 * @return \Cake\ORM\RulesChecker
+	 */
+	public function buildRules(RulesChecker $rules)
+	{
+		$rules->add($rules->isUnique(['username']));
+		$rules->add($rules->isUnique(['email']));
+		$rules->add($rules->existsIn(['player_status_id'], 'PlayerStatuses'));
+
+		return $rules;
+	}
 }

@@ -71,8 +71,8 @@ class MessagesTable extends Table
             ->allowEmpty('message');
 
         $validator
-            ->requirePresence('userName', 'create')
-            ->notEmpty('userName');
+            ->requirePresence('username', 'create')
+            ->notEmpty('username');
 
         return $validator;
     }
