@@ -28,7 +28,7 @@ class ChatComponent extends Component
     public function getMessages($chat_id){
 		$messages = $this->Messages->find()
 			->where(['chat_id ' => $chat_id])
-			->order(['created_date' => 'DESC'])
+			->order(['created_date' => 'ASC'])
 			->limit(10)
 			->all();
 		return $messages;
