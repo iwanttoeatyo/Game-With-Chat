@@ -1,4 +1,6 @@
 <?php
+
+
 /**
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -63,6 +65,7 @@ use Cake\Mailer\Email;
 use Cake\Network\Request;
 use Cake\Utility\Inflector;
 use Cake\Utility\Security;
+
 
 /*
  * Read configuration file and inject configuration into various
@@ -227,3 +230,4 @@ Configure::write('Session', [
 ]);
 
 Configure::write('App.Name','URGame');
+

@@ -1,9 +1,8 @@
 <?php
 $app_name = 'testappname';
 $title = 'URGame';
-
+echo $this->Html->script('socket.js');
 ?>
-
 	<div class="col-xs-12 top-container no-padding">
 		<div class="col-xs-4 fill placeholder no-padding">
 
@@ -15,19 +14,19 @@ $title = 'URGame';
 				</div>
 				<div class="list-group-container">
 
-					<ul class="list-group">
+					<ul class="list-group lobbies">
 			  <?php foreach ($lobbies as $lobby):?>
-						<?php $status = $lobby->lobby_status->lobby_status ?>
+						<?php $lobby_status = $lobby->lobby_status->lobby_status ?>
 						<li lobby-id="<?=h($lobby->id)?>" class="list-group-item"><?=h($lobby->name)?>
 							<span class="badge
-							<?php if ( $status == "Open") : ?>
+							<?php if ( $lobby_status == "Open") : ?>
 							btn-success
-							<?php  elseif ( $status == "Started") : ?>
+							<?php  elseif ( $lobby_status == "Started") : ?>
 							btn-primary
 							<?php  else :?>
 							btn-danger
 							<?php  endif;?>
-							"><?=h($lobby->lobby_status->lobby_status)?></span>
+							"><?=h($lobby_status)?></span>
 						</li>
 			  <?php endforeach; ?>
 					</ul>
@@ -39,12 +38,22 @@ $title = 'URGame';
 					<span>Online Players</span>
 				</div>
 				<div class="list-group-container">
-					<ul class="list-group">
-						<li class="list-group-item">Player #5<span class="badge btn-warning">In Game</span></li>
-						<li class="list-group-item">Player #6<span class="badge btn-warning">In Lobby</span></li>
-						<li class="list-group-item">Player #9<span class="badge btn-warning">In Lobby</span></li>
-						<li class="list-group-item">Player #10<span class="badge">In Global</span></li>
-						<li class="list-group-item">Player #13<span class="badge">In Global</span></li>
+					<ul class="list-group players">
+						<?php foreach ($players as $player): ?>
+				<?php $player_status = $player->player_status->player_status ?>
+							<li user-id="<?=h($player->id)?>" class="list-group-item">
+									<span><?=h($player->username)?></span>
+								<span class="badge
+							<?php if ( $player_status == "Global") : ?>
+							btn-success
+							<?php  elseif ( $player_status == "Lobby") : ?>
+							btn-primary
+							<?php  else :?>
+							btn-danger
+							<?php  endif;?>
+							">In <?=h($player_status)?></span>
+							</li>
+						<?php endforeach; ?>
 					</ul>
 				</div>
 			</div>
@@ -63,9 +72,8 @@ $title = 'URGame';
 					text text text text text text text text text text text text text text text
 					text text text text text text text text text text text text text </p>
 			</div>
-
 		</div>
 	</div>
 	<div class="col-xs-12 bottom-container no-padding ">
-		<?=$this->element('chat', array('messages' => $messages))?>
+		<?=$this->element('chat', array('messages' => $messages, $chat_id, $username, $user_id))?>
 	</div>
