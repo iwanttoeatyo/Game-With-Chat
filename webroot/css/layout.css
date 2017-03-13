@@ -180,5 +180,5 @@ ul{
 	font-weight:bold;
 }
 
-.selectable .ui-selecting { background: #EBECE4 }
+.selectable .ui-selecting { background: #EBECE4; }
 .selectable .ui-selected { background: #FEF0C9;}
