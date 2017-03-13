@@ -1542,16 +1542,16 @@
     "packages-dev": [
         {
             "name": "cakephp/bake",
-            "version": "1.3.1",
+            "version": "1.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/bake.git",
-                "reference": "dd87f9f8d688aba4da4f185fc7de9979edbe60bb"
+                "reference": "2eaae494000c02447ce4dd5529143b0a7d0f7c98"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/bake/zipball/dd87f9f8d688aba4da4f185fc7de9979edbe60bb",
-                "reference": "dd87f9f8d688aba4da4f185fc7de9979edbe60bb",
+                "url": "https://api.github.com/repos/cakephp/bake/zipball/2eaae494000c02447ce4dd5529143b0a7d0f7c98",
+                "reference": "2eaae494000c02447ce4dd5529143b0a7d0f7c98",
                 "shasum": ""
             },
             "require": {
@@ -1585,7 +1585,7 @@
                 "bake",
                 "cakephp"
             ],
-            "time": "2017-03-04T02:34:32+00:00"
+            "time": "2017-03-10T01:55:50+00:00"
         },
         {
             "name": "cakephp/debug_kit",

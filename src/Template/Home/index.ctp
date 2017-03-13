@@ -67,13 +67,7 @@ echo $this->Html->script('socket.js');
 				<div class="welcome-header">
 					<h1>Welcome to URGame</h1>
 				</div>
-				<p>text text text text text text text text text text text text text text text
-					text text text text text text text text text text text text text text text
-					text text text text text text texttext text text text text text text
-					text text text text text text text text text text text text text text text text
-					text text text text text text text text text text text text text text text
-					text text text text text text text text text text text text text </p>
-
+				<p>text </p>
 				<div class="info-container">
 
 				</div>

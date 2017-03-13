@@ -1,6 +1,8 @@
 <?php
 echo $this->Html->script('socket.js');
 echo $this->Html->css('checkers.css');
+$is_player = $user_id == $lobby->player1_user_id || $user_id == $lobby->player2_user_id;
+$is_host = $user_id == $lobby->player1_user_id;
 ?>
 <div class="col-xs-12 top-container no-padding">
 	<div class="col-xs-4 fill placeholder no-padding">
@@ -61,6 +63,25 @@ echo $this->Html->css('checkers.css');
 		  <?php else: ?>
 						You are just spectating this Lobby
 		  <?php endif; ?>
+
+
+		  <?php if ($is_player): ?>
+			<form method="post" accept-charset="utf-8" action="/lobbies/start/<?= $lobby->id ?>">
+				<button id="start-lobby-btn" class="btn btn-primary"
+			<?php if ($lobby->lobby_status_id != \App\Model\Entity\LobbyStatus::Full) : ?>
+							disabled
+			<?php endif; ?>
+								type="submit">Start Lobby
+				</button>
+			</form>
+		<?php endif; ?>
+
+		<?php if ($is_player) : ?>
+					<form method="post" accept-charset="utf-8" action="/lobbies/leave/<?= $lobby->id ?>">
+						<button id="leave-lobby-btn" class="btn btn-primary" type="submit">Leave Lobby
+						</button>
+					</form>
+		<?php endif; ?>
 			</p>
 		</div>
 	</div>

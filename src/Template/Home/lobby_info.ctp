@@ -17,7 +17,7 @@
 
 <form method="post" accept-charset="utf-8" action="/lobbies/join/<?= $lobby->id ?>">
 	<button class="btn btn-primary"
-	  <?php if ($lobby->lobby_status->lobby_status != \App\Model\Entity\LobbyStatus::Open) : ?>
+	  <?php if ($lobby->lobby_status_id != \App\Model\Entity\LobbyStatus::Open) : ?>
 				disabled
 	  <?php endif; ?>
 					type="submit">Join Lobby

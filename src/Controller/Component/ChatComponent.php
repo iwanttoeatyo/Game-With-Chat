@@ -40,6 +40,7 @@ class ChatComponent extends Component
 			->limit(10)
 			->all();
 
+		//Reverse the order of messages so newest is on the bottom
 		$messages = [];
 		foreach ($results as $message){
 			$messages[] = $message;

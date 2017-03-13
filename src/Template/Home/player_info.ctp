@@ -1,3 +1,4 @@
+
 <div style="display:block">
 	<div>Username: <?= $player->username ?></div>
 	<div>

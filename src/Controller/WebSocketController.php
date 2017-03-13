@@ -67,8 +67,8 @@ class WebSocketController extends AppController implements MessageComponentInter
 				break;
 			case "message":
 				if (isset($this->subscriptions[$conn->resourceId])) {
-					if(empty($this->user_ids[$conn->resourceId]))
-						$data->msg->username = "Guest ".$conn->resourceId;
+					if (empty($this->user_ids[$conn->resourceId]))
+						$data->msg->username = "Guest " . $conn->resourceId;
 					//Save message in Database
 					$saved = $this->Chat->sendMessage($this->subscriptions[$conn->resourceId], $data->msg);
 					//If message saved in db send it to all other users in same chat
@@ -82,6 +82,7 @@ class WebSocketController extends AppController implements MessageComponentInter
 						}
 					}
 				}
+				break;
 		}
 	}
 
