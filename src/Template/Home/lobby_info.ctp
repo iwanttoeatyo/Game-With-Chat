@@ -14,7 +14,7 @@
 	</div>
 </div>
 
-
+<?php if (isset($user_id)):?>
 <form method="post" accept-charset="utf-8" action="/lobbies/join/<?= $lobby->id ?>">
 	<button class="btn btn-primary"
 	  <?php if ($lobby->lobby_status_id != \App\Model\Entity\LobbyStatus::Open) : ?>
@@ -23,7 +23,7 @@
 					type="submit">Join Lobby
 	</button>
 </form>
-
+<?php endif;?>
 <form method="get" accept-charset="utf-8" action="/lobbies/view/<?= $lobby->id ?>" >
 	<button class="btn btn-primary" type="submit">Watch Lobby</button>
 </form>
