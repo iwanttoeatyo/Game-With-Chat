@@ -13,7 +13,8 @@ use Cake\ORM\Entity;
  */
 class GameStatus extends Entity
 {
-
+	const Active = 0;
+	const Ended = 1;
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

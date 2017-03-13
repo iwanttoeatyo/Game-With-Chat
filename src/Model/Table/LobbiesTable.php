@@ -10,8 +10,8 @@ use Cake\Validation\Validator;
  * Lobbies Model
  *
  * @property \Cake\ORM\Association\BelongsTo $LobbyStatuses
- * @property \Cake\ORM\Association\BelongsTo Player1
- * @property \Cake\ORM\Association\BelongsTo Player2
+ * @property \Cake\ORM\Association\BelongsTo $Player1
+ * @property \Cake\ORM\Association\BelongsTo $Player2
  * @property \Cake\ORM\Association\BelongsTo $Chats
  * @property \Cake\ORM\Association\HasOne $Games
  *
@@ -52,7 +52,7 @@ class LobbiesTable extends Table
 		$this->belongsTo('Player2', [
 			'className' => 'Users',
 			'foreignKey' => 'player2_user_id',
-			'joinType' => 'INNER'
+			'joinType' => 'LEFT'
 		]);
         $this->belongsTo('Chats', [
             'foreignKey' => 'chat_id',
@@ -61,6 +61,14 @@ class LobbiesTable extends Table
         $this->hasOne('Games', [
             'foreignKey' => 'lobby_id'
         ]);
+
+		$this->addBehavior('Timestamp', [
+			'events' => [
+				'Model.beforeSave' => [
+					'created_date' => 'new',
+				]
+			]
+		]);
     }
 
     /**
@@ -102,8 +110,8 @@ class LobbiesTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['lobby_status_id'], 'LobbyStatuses'));
-        $rules->add($rules->existsIn(['player1_user_id'], 'Player1Users'));
-        $rules->add($rules->existsIn(['player2_user_id'], 'Player2Users'));
+        $rules->add($rules->existsIn(['player1_user_id'], 'Player1'));
+        $rules->add($rules->existsIn(['player2_user_id'], 'Player2'));
         $rules->add($rules->existsIn(['chat_id'], 'Chats'));
 
         return $rules;

@@ -23,7 +23,8 @@ use Cake\ORM\Entity;
  */
 class Lobby extends Entity
 {
-
+	Const Locked = true;
+	Const Unlocked = false;
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

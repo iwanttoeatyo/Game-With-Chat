@@ -12,9 +12,9 @@ $(function () {
 	};
 
 	//HTTPS for Server
-	var conn = new WebSocket('wss://' + document.domain + '/socket/');
+	//var conn = new WebSocket('wss://' + document.domain + '/socket/');
 	//Regular for local dev
-	//var conn = new WebSocket('ws://' + document.domain + ':2020');
+	var conn = new WebSocket('ws://' + document.domain + ':2020');
 
 
 	var chat_id = $('#chat-id').val();
@@ -22,12 +22,13 @@ $(function () {
 	var game_id = $('#game-id').val();
 	var username = $('#username').val();
 	var user_id = $('#user-id').val();
+	var host_id = $('#host-id').val();
+
 	var $window = $(window);
 	var $inputMessage = $('#input-message'); // Input message input box
 	var $messages = $('.messages');
 	var $lobbies = $('.lobbies');
 	var $players = $('.players');
-
 	var player_status = 0;
 
 	if(game_id)
@@ -39,6 +40,7 @@ $(function () {
 
 
 	$(document).ready(function(){
+		makeSelectable();
 		scrollDownChat();
 	});
 
@@ -48,8 +50,6 @@ $(function () {
 
 
 	conn.onopen = function (e) {
-		console.log("Connection established!");
-		console.log(JSON.stringify({command: "joinChat", player_status: player_status, chat_id: chat_id, user_id: user_id}));
 		conn.send(JSON.stringify({command: "joinChat", player_status: player_status, chat_id: chat_id, user_id: user_id}));
 		addChatMessage({username:'*System', message: 'You have connected to the server.'});
 	};
@@ -58,7 +58,6 @@ $(function () {
 		var data = JSON.parse(e.data);
 
 		if(data)
-			console.log(data);
 			switch(data.command){
 				case "message":
 					addChatMessage(data.msg);
@@ -73,9 +72,8 @@ $(function () {
 	function updatePlayers(){
 		$.ajax({
 			type: "POST",
-			url: '/home/getPlayerList',
+			url: '/Home/getPlayerList',
 			success: function(response){
-				console.log(response);
 				$players.empty();
 				for(var i = 0; i < response.length; i++){
 					$players.append(addPlayer(response[i]));
@@ -89,8 +87,6 @@ $(function () {
 		var $usernameDiv = $('<span/>')
 				.text(player.username)
 		var $badgeDiv = $('<span class="badge"/>')
-		console.log(player);
-		console.log(player.player_status_id);
 		switch(player.player_status_id){
 			case PLAYER_STATUS.GLOBAL:
 				$badgeDiv.addClass("btn-success");
@@ -112,9 +108,6 @@ $(function () {
 	// Sends a chat message
 	function sendMessage() {
 		var message = $inputMessage.val();
-		if(username == null){
-			username = "Guest";
-		}
 		// Prevent markup from being injected into the message
 		message = cleanInput(message);
 		// if there is a non-empty message and a socket connection
@@ -126,7 +119,6 @@ $(function () {
 	}
 
 	function addChatMessage(data){
-		console.log(data);
 		var $usernameDiv = $('<span class="username"/>')
 				.text(data.username + ": ")
 				.css('color', getUsernameColor(data.username));
@@ -169,6 +161,53 @@ $(function () {
 		// Calculate color
 		var index = Math.abs(hash % COLORS.length);
 		return COLORS[index];
+	}
+
+
+	function makeSelectable(){
+		$( ".selectable" ).selectable({
+			selected: function( event, ui ) {
+				$('.selectable .ui-selected').removeClass('ui-selected');
+				$(ui.selected).addClass('ui-selected');
+
+				//If selected lobby
+				var lobby_id = $(ui.selected).attr('lobby-id');
+
+				if(lobby_id){
+					getLobbyInfo(lobby_id);
+				}
+
+				//if selected player
+				var user_id = $(ui.selected).attr('user-id');
+				if(user_id){
+					getPlayerInfo(user_id);
+				}
+
+			}
+		});
+	}
+
+	function getLobbyInfo(lobby_id){
+		$.ajax({
+			type: "POST",
+			url: '/Home/getLobbyInfo',
+			data: {id : lobby_id},
+			success: function(response){
+				$('.info-container').html(response);
+			}
+		});
+	}
+
+
+	function getPlayerInfo(user_id){
+		$.ajax({
+			type: "POST",
+			url: '/Home/getPlayerInfo',
+			data: {id : user_id},
+			success: function(response){
+				$('.info-container').html(response);
+			}
+		});
 	}
 
 	$window.keydown(function (event) {

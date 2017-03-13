@@ -14,15 +14,19 @@ use App\Controller\Component\PlayerComponent;
  * Send any incoming messages to all connected clients (except sender)
  *
  */
-class WebSocketController extends AppController implements MessageComponentInterface  {
+class WebSocketController extends AppController implements MessageComponentInterface
+{
 	protected $clients;
 	private $users;
 	private $user_ids;
 	private $subscriptions;
 	private $Messages;
 
-	public function initialize() {
+	public function initialize()
+	{
 		$this->loadComponent('Player');
+		$this->loadComponent('Lobby');
+		$this->loadComponent('Chat');
 		$this->Messages = TableRegistry::get('Messages');
 		$this->clients = new \SplObjectStorage;
 		$this->subscriptions = [];
@@ -34,66 +38,72 @@ class WebSocketController extends AppController implements MessageComponentInter
 	{
 		$this->clients->attach($conn);
 		//Store
-		$this->users[$conn->resourceId] =  $conn;
+		$this->users[$conn->resourceId] = $conn;
 
 	}
 
-	public function onMessage(ConnectionInterface $conn, $msg) {
+	public function onMessage(ConnectionInterface $conn, $msg)
+	{
 		$data = json_decode($msg);
-		echo dump($data);
 		switch ($data->command) {
 			case "joinChat":
+				echo dump($data);
 				//key = users connection id, value = chat_id
 				$this->subscriptions[$conn->resourceId] = $data->chat_id;
-				if($data->user_id){
+				if ($data->user_id) {
 					$this->user_ids[$conn->resourceId] = $data->user_id;
 					$this->Player->addPlayer($data->user_id, $data->player_status);
 
 				}
 
-				//Emit update players
-				foreach ($this->subscriptions as $user_id=>$chat_id) {
+				//Alert all people in global chat to update player list
+				foreach ($this->subscriptions as $user_id => $chat_id) {
 					if ($chat_id == 1) {
 						$this->users[$user_id]->send(json_encode(array('command' => 'updatePlayers')));
 					}
 				}
 
+
 				break;
 			case "message":
 				if (isset($this->subscriptions[$conn->resourceId])) {
-
+					if(empty($this->user_ids[$conn->resourceId]))
+						$data->msg->username = "Guest ".$conn->resourceId;
 					//Save message in Database
-					$message = $this->Messages->newEntity();
-					$message->chat_id = $this->subscriptions[$conn->resourceId];
-					$message->created_date = new DateTime('now');
-					$message->message = $data->msg->message;
-					$message->username = $data->msg->username;
-					//If message saved send it to all other users in same chat
-					if($this->Messages->save($message)){
+					$saved = $this->Chat->sendMessage($this->subscriptions[$conn->resourceId], $data->msg);
+					//If message saved in db send it to all other users in same chat
+					if ($saved) {
+						echo dump($data);
 						$targetChat = $this->subscriptions[$conn->resourceId];
-						foreach ($this->subscriptions as $user_id=>$chat_id) {
+						foreach ($this->subscriptions as $user_id => $chat_id) {
 							if ($chat_id == $targetChat) {
-								$this->users[$user_id]->send($msg);
+								$this->users[$user_id]->send(json_encode($data));
 							}
 						}
 					}
-
-
 				}
 		}
 	}
 
-	public function onClose(ConnectionInterface $conn) {
+	public function onClose(ConnectionInterface $conn)
+	{
 		// The connection is closed, remove it, as we can no longer send it messages
 		$this->clients->detach($conn);
-		if(isset($this->user_ids[$conn->resourceId]))
+		if (isset($this->user_ids[$conn->resourceId])) {
+			//Set player to Offline
 			$this->Player->removePlayer($this->user_ids[$conn->resourceId]);
+			//Make player leave Lobby
+			//$this->Lobby->leave($this->user_ids[$conn->resourceId]);
+		}
+
+
 		unset($this->users[$conn->resourceId]);
 		unset($this->subscriptions[$conn->resourceId]);
 		unset($this->user_ids[$conn->resourceId]);
 	}
 
-	public function onError(ConnectionInterface $conn, \Exception $e) {
+	public function onError(ConnectionInterface $conn, \Exception $e)
+	{
 		echo "An error has occurred: {$e->getMessage()}\n";
 
 		$conn->close();

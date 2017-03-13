@@ -1,131 +1,217 @@
 div.info, div.stats {
-  width: 70%;
-  margin: 15vmin auto 0;
-  box-sizing: border-box;
-  padding: 20px 30px;
-  background-color: #F1F1FF;
-  color: #3A3042;
-  border-radius: 3px;
-  box-shadow: 1px 1px 3px #232621; }
+	padding: 20px 20px;
+	background-color: #F1F1FF;
+	color: #3A3042;
+}
 
 div.stats {
-  margin: 0 !important; }
-  div.stats .wrapper {
-    display: flex; }
-  div.stats #player1 {
-    text-align: center;
-    display: inline-block;
-    width: 50%;
-    float: left;
-    background-color: #B93848;
-    box-sizing: border-box;
-    padding: 0 15px 20px;
-    border-top-left-radius: 3px;
-    color: #232621; }
-    div.stats #player1 .capturedPiece {
-      width: 2.4vmin;
-      height: 2.4vmin;
-      background-color: #232621;
-      background-size: 65%;
-      background-repeat: no-repeat;
-      background-position: center;
-      border-radius: 6vmin;
-      display: inline-block;
-      box-sizing: border-box;
-      transition: all 0.2s linear;
-      margin: 5px; }
-  div.stats #player2 {
-    text-align: center;
-    display: inline-block;
-    width: 50%;
-    float: left;
-    background-color: #232621;
-    box-sizing: border-box;
-    padding: 0 15px 20px;
-    border-top-right-radius: 3px;
-    color: #B93848; }
-    div.stats #player2 .capturedPiece {
-      width: 2.4vmin;
-      height: 2.4vmin;
-      background-color: #B93848;
-      background-size: 65%;
-      background-repeat: no-repeat;
-      background-position: center;
-      border-radius: 6vmin;
-      display: inline-block;
-      box-sizing: border-box;
-      transition: all 0.2s linear;
-      margin: 5px; }
-  div.stats div.turn {
-    height: 10px;
-    width: 100%;
-    background: linear-gradient(to right, #BEEE62 50%, transparent 50%);
-    border-radius: 0 0 3px 3px; }
-  div.stats button#cleargame {
-    display: block;
-    border: 0;
-    color: #F1F1FF;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 20px auto 10px;
-    padding: 10px;
-    background-color: #16A8C7;
-    box-shadow: 1px 1px 3px #232621;
-    transition: background-color 0.15s linear; }
-    div.stats button#cleargame:hover {
-      background-color: #0c5a6b; }
+	height: 215px !important;
+}
+
+div.stats .wrapper {
+	display: flex;
+}
+
+div.stats #player1 {
+	text-align: center;
+	display: inline-block;
+	width: 100%;
+	height: 100%;
+	float: left;
+	background-color: #B93848;
+	box-sizing: border-box;
+	padding: 0 15px 20px;
+	border-top-left-radius: 3px;
+	color: #232621;
+}
+
+div.stats #player1 .capturedPiece {
+	width: 2.4vmin;
+	height: 2.4vmin;
+	background-color: #232621;
+	background-size: 65%;
+	background-repeat: no-repeat;
+	background-position: center;
+	border-radius: 6vmin;
+	display: inline-block;
+	box-sizing: border-box;
+	transition: all 0.2s linear;
+	margin: 5px;
+}
+
+div.stats #player2 {
+	text-align: center;
+	display: inline-block;
+	width: 100%;
+	height: 100%;
+	float: left;
+	background-color: #232621;
+	box-sizing: border-box;
+	padding: 0 15px 20px;
+	border-top-right-radius: 3px;
+	color: #B93848;
+}
+
+div.stats #player2 .capturedPiece {
+	width: 2.4vmin;
+	height: 2.4vmin;
+	background-color: #B93848;
+	background-size: 65%;
+	background-repeat: no-repeat;
+	background-position: center;
+	border-radius: 6vmin;
+	display: inline-block;
+	box-sizing: border-box;
+	transition: all 0.2s linear;
+	margin: 5px;
+}
+
+/*
+div.stats div.turn {
+	height: 10px;
+	width: 100%;
+	background: linear-gradient(to right, #BEEE62 50%, transparent 50%);
+	border-radius: 0 0 3px 3px;
+}
+*/
+div.stats div#player1Turn {
+	height: 10px;
+	width: 100%;
+	background: #BEEE62;
+	border-radius: 0 0 3px 3px;
+}
+
+div.stats div#player2Turn {
+	height: 10px;
+	width: 100%;
+	background: transparent;
+	border-radius: 0 0 3px 3px;
+}
+
+div.stats button#cleargame {
+	display: block;
+	border: 0;
+	color: #F1F1FF;
+	border-radius: 5px;
+	cursor: pointer;
+	margin: 20px auto 10px;
+	padding: 10px;
+	background-color: #16A8C7;
+	box-shadow: 1px 1px 3px #232621;
+	transition: background-color 0.15s linear;
+}
+
+div.stats button#cleargame:hover {
+	background-color: #0c5a6b;
+}
 
 div#board {
-  position: relative;
-  margin: auto;
-  width: 64vmin;
-  height: 64vmin;
-  border-radius: 5px;
-  box-shadow: 1px 1px 3px #232621;
-  background-color: #B93848;
-  overflow:hidden; }
-  div#board .tile {
-    width: 8vmin;
-    height: 8vmin;
-    position: absolute;
-    background-color: #232621; }
-  div#board .player1pieces .piece {
-    position: absolute;
-    width: 6vmin;
-    height: 6vmin;
-    background-color: #e4a6ae;
-    background-size: 65%;
-    background-repeat: no-repeat;
-    background-position: center;
-    border-radius: 6vmin;
-    display: inline-block;
-    box-sizing: border-box;
-    transition: all 0.2s linear;
-    margin-top: 1vmin;
-    margin-left: 1vmin;
-    cursor: pointer;
-    border: 1vmin solid #B93848; }
-    div#board .player1pieces .piece.selected {
-      box-shadow: 0 0 10px 5px #16A8C7; }
-  div#board .player2pieces .piece {
-    position: absolute;
-    width: 6vmin;
-    height: 6vmin;
-    background-color: #F1F1FF;
-    background-size: 65%;
-    background-repeat: no-repeat;
-    background-position: center;
-    border-radius: 6vmin;
-    display: inline-block;
-    box-sizing: border-box;
-    transition: all 0.2s linear;
-    margin-top: 1vmin;
-    margin-left: 1vmin;
-    cursor: pointer;
-    border: 1vmin solid #8b8bff; }
-    div#board .player2pieces .piece.selected {
-      box-shadow: 0 0 10px 5px #16A8C7; }
+	position: relative;
+	margin: auto;
+	width: 64vmin;
+	height: 64vmin;
+	border-radius: 5px;
+	box-shadow: 1px 1px 3px #232621;
+	background-color: #B93848;
+	overflow: hidden;
+}
 
+div#board .tile {
+	width: 8vmin;
+	height: 8vmin;
+	position: absolute;
+	background-color: #232621;
+}
 
+div#board .player1pieces .piece {
+	position: absolute;
+	width: 6vmin;
+	height: 6vmin;
+	background-color: #e4a6ae;
+	background-size: 65%;
+	background-repeat: no-repeat;
+	background-position: center;
+	border-radius: 6vmin;
+	display: inline-block;
+	box-sizing: border-box;
+	transition: all 0.2s linear;
+	margin-top: 1vmin;
+	margin-left: 1vmin;
+	cursor: pointer;
+	border: 1vmin solid #B93848;
+}
+
+div#board .player1pieces .piece.selected {
+	box-shadow: 0 0 10px 5px #16A8C7;
+}
+
+div#board .player2pieces .piece {
+	position: absolute;
+	width: 6vmin;
+	height: 6vmin;
+	background-color: #F1F1FF;
+	background-size: 65%;
+	background-repeat: no-repeat;
+	background-position: center;
+	border-radius: 6vmin;
+	display: inline-block;
+	box-sizing: border-box;
+	transition: all 0.2s linear;
+	margin-top: 1vmin;
+	margin-left: 1vmin;
+	cursor: pointer;
+	border: 1vmin solid #8b8bff;
+}
+
+div#board .player2pieces .piece.selected {
+	box-shadow: 0 0 10px 5px #16A8C7;
+}
 
 /*# sourceMappingURL=checkers.css.map */
+
+/* The following codes are used to make a customized alert box */
+#dialogoverlay {
+	display: none;
+	opacity: .8;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	background: #FFF;
+	width: 100%;
+	z-index: 10;
+}
+
+#dialogbox {
+	display: none;
+	position: fixed;
+	background: #000;
+	border-radius: 7px;
+	width: 550px;
+	z-index: 10;
+}
+
+#dialogbox > div {
+	background: #FFF;
+	margin: 8px;
+}
+
+#dialogbox > div > #dialogboxhead {
+	background: #666;
+	font-size: 19px;
+	padding: 10px;
+	color: #CCC;
+}
+
+#dialogbox > div > #dialogboxbody {
+	background: #333;
+	padding: 20px;
+	color: #FFF;
+}
+
+#dialogbox > div > #dialogboxfoot {
+	background: #666;
+	padding: 10px;
+	text-align: right;
+}
+
+/*# sourceMappingURL=http://www.developphp.com/video/JavaScript/Custom-Alert-Box-Programming-Tutorial */

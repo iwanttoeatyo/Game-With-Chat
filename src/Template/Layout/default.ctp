@@ -5,16 +5,18 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<title>
-	  <?= $this->fetch('title')?>
+	  <?= $this->viewVars['title']?>
 	</title>
 
 	<?= $this->Html->meta('icon') ?>
 	<?= $this->fetch('meta') ?>
 
-	<?= $this->Html->script('jquery-3.1.1.js') ?>
+	<?= $this->Html->script('jquery-3.1.1.min.js') ?>
+	<?= $this->Html->script('jquery-ui.min.js') ?>
 	<?= $this->Html->script('bootstrap.js') ?>
 	<?= $this->fetch('script') ?>
 
+	<?= $this->Html->css('jquery-ui.min.css') ?>
 	<?= $this->Html->css('bootstrap.css') ?>
 	<?= $this->Html->css('bootstrap-theme.css') ?>
 	<?= $this->Html->css('layout.css') ?>

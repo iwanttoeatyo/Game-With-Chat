@@ -1,6 +1,4 @@
 <?php
-$app_name = 'testappname';
-$title = 'URGame';
 echo $this->Html->script('socket.js');
 ?>
 	<div class="col-xs-12 top-container no-padding">
@@ -9,15 +7,19 @@ echo $this->Html->script('socket.js');
 
 			<div class="top-side-division">
 				<div class="division-header">
-					<span>Games/Lobbies</span>
-					<button type="button" class="btn btn-primary pull-right">New Lobby</button>
+					<span style="float:left">Games/Lobbies</span>
+			<?php if(isset($user_id)):?>
+					<form method="post" accept-charset="utf-8" action="/lobbies/add" style="">
+						<button class="btn btn-primary pull-right" type="submit" >New Lobby</button>
+					</form>
+			<?php endif;?>
 				</div>
 				<div class="list-group-container">
 
-					<ul class="list-group lobbies">
+					<ul class="list-group lobbies selectable">
 			  <?php foreach ($lobbies as $lobby):?>
 						<?php $lobby_status = $lobby->lobby_status->lobby_status ?>
-						<li lobby-id="<?=h($lobby->id)?>" class="list-group-item"><?=h($lobby->name)?>
+						<li lobby-id="<?=h($lobby->id)?>" class="list-group-item ui-widget-content"><?=h($lobby->name)?>
 							<span class="badge
 							<?php if ( $lobby_status == "Open") : ?>
 							btn-success
@@ -38,7 +40,7 @@ echo $this->Html->script('socket.js');
 					<span>Online Players</span>
 				</div>
 				<div class="list-group-container">
-					<ul class="list-group players">
+					<ul class="list-group players selectable">
 						<?php foreach ($players as $player): ?>
 				<?php $player_status = $player->player_status->player_status ?>
 							<li user-id="<?=h($player->id)?>" class="list-group-item">
@@ -71,6 +73,10 @@ echo $this->Html->script('socket.js');
 					text text text text text text text text text text text text text text text text
 					text text text text text text text text text text text text text text text
 					text text text text text text text text text text text text text </p>
+
+				<div class="info-container">
+
+				</div>
 			</div>
 		</div>
 	</div>

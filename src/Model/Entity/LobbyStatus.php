@@ -13,7 +13,10 @@ use Cake\ORM\Entity;
  */
 class LobbyStatus extends Entity
 {
-
+	const Open = 0;
+	const Full = 1;
+	const Started = 2;
+	const Closed = 3;
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

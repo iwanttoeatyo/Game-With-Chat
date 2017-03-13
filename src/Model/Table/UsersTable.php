@@ -10,6 +10,9 @@ use Cake\Validation\Validator;
  * Users Model
  *
  * @property \Cake\ORM\Association\BelongsTo $PlayerStatuses
+ * @property \Cake\ORM\Association\hasOne $LobbyAsPlayer1
+ * @property \Cake\ORM\Association\hasOne $LobbyAsPlayer2
+ * @property \Cake\ORM\Association\hasOne $Scores
  *
  * @method \App\Model\Entity\User get($primaryKey, $options = [])
  * @method \App\Model\Entity\User newEntity($data = null, array $options = [])
@@ -39,6 +42,19 @@ class UsersTable extends Table
 		$this->belongsTo('PlayerStatuses', [
 			'foreignKey' => 'player_status_id',
 			'joinType' => 'INNER'
+		]);
+
+		$this->hasOne('LobbyAsPlayer1', [
+			'className' => 'Lobbies',
+			'foreignKey' => 'player1_user_id'
+		]);
+		$this->hasOne('LobbyAsPlayer2', [
+			'className' => 'Lobbies',
+			'foreignKey' => 'player2_user_id'
+		]);
+
+		$this->hasOne('Scores', [
+			'foreignKey' => 'user_id'
 		]);
 
 		$this->addBehavior('Timestamp', [
