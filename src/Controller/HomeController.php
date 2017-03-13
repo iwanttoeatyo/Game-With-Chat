@@ -67,12 +67,13 @@ class HomeController extends AppController
 	}
 
 	public function getLobbyInfo(){
+		$user_id = $this->Auth->user('id');
 		$id = $this->request->getData('id');
 		$this->autoRender = false;
 		if ($this->request->is('post')) {
 			$lobby = $this->Lobby->getLobby($id);
 
-			$this->set(compact('lobby'));
+			$this->set(compact('lobby', 'user_id'));
 			$this->render('lobbyInfo','ajax');
 		}
 	}

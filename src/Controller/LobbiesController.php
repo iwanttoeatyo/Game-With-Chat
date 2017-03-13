@@ -45,13 +45,23 @@ class LobbiesController extends AppController
 		$user_id = $this->Auth->user('id');
 
 		$lobby = $this->Lobby->getLobby($id);
+
+		//check if user is player
+		if(isset($user_id))
+			if($lobby->get('player1_user_id') == $user_id){
+				$is_player = true;
+				$is_host = true;
+			}else if ($lobby->get('player2_user_id') == $user_id){
+				$is_player = true;
+			}
+
 		//get recent messages
 		$messages = $this->Chat->getMessages($lobby->get('chat_id'));
 
 		$title = $lobby->name;
 
 		$this->set(compact('title', 'messages', 'lobby',
-			'username', 'user_id'));
+			'username', 'user_id','is_player','is_host'));
     }
 
     public function join($id = null){
