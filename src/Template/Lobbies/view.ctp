@@ -13,9 +13,7 @@ echo $this->Html->css('checkers.css');
 		  <?php if (isset($lobby->player1))
 		  echo $lobby->player1->username; ?>
 				</span>
-
 			</div>
-
 			<div class="stats fill">
 				<div class="wrapper">
 					<div id="player1">
@@ -28,7 +26,7 @@ echo $this->Html->css('checkers.css');
 		</div>
 		<div class="bottom-side-division">
 			<div class="division-header">
-		  	<span id="player1-name">
+		  	<span id="player2-name">
 		  <?php if (isset($lobby->player2))
 		  echo $lobby->player2->username;
 	  else
@@ -50,21 +48,22 @@ echo $this->Html->css('checkers.css');
 	<div class="col-xs-8 fill">
 		<div class="home-container">
 			<input type="hidden" id="lobby-id" value="<?= $lobby->id ?>">
-			<input type="hidden" id="host-id" value="<?= $lobby->player1_user_id ?>">
+			<input type="hidden" id="player1-id" value="<?= $lobby->player1_user_id ?>">
+			<input type="hidden" id="player2-id" value="<?= $lobby->player2_user_id ?>">
 			<div class="welcome-header">
 				<h1><?= h($lobby->name) ?></h1>
 			</div>
 			<p>
-		  <?php if ($user_id == $lobby->player1_user_id): ?>
-						You are the Host of this Lobby
-		  <?php elseif ($user_id && $user_id == $lobby->player2_user_id): ?>
+		  <?php if (isset($is_player1)): ?>
+						You are the Host (Player 1) of this Lobby
+		  <?php elseif (isset($is_player2)): ?>
 						You are Player 2 in this Lobby
 		  <?php else: ?>
 						You are just spectating this Lobby
 		  <?php endif; ?>
 
 
-		  <?php if (isset($is_player)): ?>
+		  <?php if (isset($is_player1) || isset($is_player2)): ?>
 			<form method="post" accept-charset="utf-8" action="/lobbies/start/<?= $lobby->id ?>">
 				<button id="start-lobby-btn" class="btn btn-primary"
 			<?php if ($lobby->lobby_status_id != \App\Model\Entity\LobbyStatus::Full) : ?>
@@ -75,7 +74,7 @@ echo $this->Html->css('checkers.css');
 			</form>
 		<?php endif; ?>
 
-		<?php if (isset($is_player)) : ?>
+		<?php if  (isset($is_player1) || isset($is_player2)): ?>
 					<form method="post" accept-charset="utf-8" action="/lobbies/leave/<?= $lobby->id ?>">
 						<button id="leave-lobby-btn" class="btn btn-primary" type="submit">Leave Lobby
 						</button>

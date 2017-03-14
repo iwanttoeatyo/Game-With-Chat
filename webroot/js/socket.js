@@ -6,9 +6,9 @@ $(function () {
 	];
 
 	var PLAYER_STATUS = {
-		GLOBAL : 1,
-		LOBBY:  2,
-		GAME : 3
+		GLOBAL: 1,
+		LOBBY: 2,
+		GAME: 3
 	};
 
 	//HTTPS for Server
@@ -22,87 +22,125 @@ $(function () {
 	var game_id = $('#game-id').val();
 	var username = $('#username').val();
 	var user_id = $('#user-id').val();
-	var host_id = $('#host-id').val();
+	var player1_id = $('#player1-id').val();
+	var player2_id = $('#player2-id').val();
+	var is_player2 = (user_id == player2_id);
+	var player_status;
 
 	var $window = $(window);
 	var $inputMessage = $('#input-message'); // Input message input box
 	var $messages = $('.messages');
 	var $lobbies = $('.lobbies');
 	var $players = $('.players');
-	var player_status = 0;
+	var $player2_name = $('#player2-name');
+	var $start_btn = $('#start-lobby-btn');
 
-	if(game_id)
+	if (game_id)
 		player_status = PLAYER_STATUS.GAME;
-	else if(lobby_id)
+	else if (lobby_id)
 		player_status = PLAYER_STATUS.LOBBY;
 	else
 		player_status = PLAYER_STATUS.GLOBAL
 
+	makeSelectable();
+	scrollDownChat();
 
-	$(document).ready(function(){
-		makeSelectable();
-		scrollDownChat();
-	});
-
-	conn.onerror=function(e){
-		addChatMessage({username:'*System', message: 'Can\'t connect to the server.'});
+//On websocket error
+	conn.onerror = function (e) {
+		addChatMessage({username: '*System', message: 'Can\'t connect to the server.'});
 	}
 
-
+//On Websocket first connection
 	conn.onopen = function (e) {
-		conn.send(JSON.stringify({command: "joinChat", player_status: player_status, chat_id: chat_id, user_id: user_id}));
-		addChatMessage({username:'*System', message: 'You have connected to the server.'});
+		//Tell websocket to have this client join this chat channel
+		conn.send(JSON.stringify({
+			command: "joinChat",
+			player_status: player_status,
+			chat_id: chat_id,
+			user_id: user_id
+		}));
+		//tell users to refresh lobbies if player 2 has joined.
+		if(is_player2){
+			sendUpdateLobby();
+		}
+		addChatMessage({username: '*System', message: 'You have connected to the server.'});
 	};
 
+	//On Websocket sends client a message
 	conn.onmessage = function (e) {
 		var data = JSON.parse(e.data);
 
-		if(data)
-			switch(data.command){
+		if (data)
+			switch (data.command) {
 				case "message":
 					addChatMessage(data.msg);
 					break;
-				case "updatePlayers":
-					updatePlayers();
+				case "updateLobbyList":
+					//Delay so we don't refresh lobby before database updates
+					setTimeout(updateLobbyList, 200);
+					break;
+				case "updatePlayerList":
+					updatePlayerList();
+					break;
+				case "updateLobby":
+					//Delay so we don't refresh lobby before database updates
+					setTimeout(updateLobby, 200);
+					break;
 			}
-
-
 	};
 
-	function updatePlayers(){
+	function sendUpdateLobby(){
+		conn.send(JSON.stringify({
+			command: "updateLobby",
+			chat_id: chat_id
+		}));
+	}
+
+	function updateLobby(){
 		$.ajax({
 			type: "POST",
-			url: '/Home/getPlayerList',
-			success: function(response){
-				$players.empty();
-				for(var i = 0; i < response.length; i++){
-					$players.append(addPlayer(response[i]));
-				}
-
+			url: '/Lobbies/refreshLobby',
+			data: {id: lobby_id},
+			success: function (response) {
+				refreshLobby(response);
 			}
 		});
 	}
 
-	function addPlayer(player){
-		var $usernameDiv = $('<span/>')
-				.text(player.username)
-		var $badgeDiv = $('<span class="badge"/>')
-		switch(player.player_status_id){
-			case PLAYER_STATUS.GLOBAL:
-				$badgeDiv.addClass("btn-success");
-				break;
-			case PLAYER_STATUS.LOBBY:
-				$badgeDiv.addClass("btn-primary");
-				break;
-			case PLAYER_STATUS.GAME:
-				$badgeDiv.addClass("btn-danger")
+	function refreshLobby(data){
+		//fix player2 name
+		if(data.player2_name){
+			($player2_name).text(data.player2_name);
+			addChatMessage({username: '*System', message: data.player2_name + " has joined as Player 2."});
+		}else{
+			$player2_name.text("Waiting for player to join...");
+			addChatMessage({username: '*System', message: "Player 2 has left."});
 		}
-		$badgeDiv.text("In " + player.player_status.player_status);
+		if(data.lobby_status == "Full"){
+			$start_btn.removeAttr("disabled");
+		}else{
+			$start_btn.attr("disabled",true);
+		}
+	}
 
-		var $playerDiv = $('<li user-id="'+ player.id +'" class="list-group-item">')
-				.append($usernameDiv,$badgeDiv);
+	function updatePlayerList() {
+		$.ajax({
+			type: "POST",
+			url: '/Home/getPlayerList',
+			success: function (response) {
+				$players.html(response)
+			}
+		});
+	}
 
-		return $playerDiv;
+	function updateLobbyList() {
+		$.ajax({
+			type: "POST",
+			url: '/Home/getLobbyList',
+			success: function (response) {
+				$lobbies.html(response)
+			}
+		});
 	}
 
 	// Sends a chat message
@@ -114,11 +152,11 @@ $(function () {
 		if (message) {
 			$inputMessage.val('');
 			// tell server to execute 'new message' and send along one parameter
-			conn.send(JSON.stringify({command: "message", msg: {username:username, message: message}}));
+			conn.send(JSON.stringify({command: "message", msg: {username: username, message: message}}));
 		}
 	}
 
-	function addChatMessage(data){
+	function addChatMessage(data) {
 		var $usernameDiv = $('<span class="username"/>')
 				.text(data.username + ": ")
 				.css('color', getUsernameColor(data.username));
@@ -134,25 +172,25 @@ $(function () {
 
 	// Adds a message element to the messages and scrolls to the bottom
 	// el - The element to add as a message
-	function addMessageElement (el) {
+	function addMessageElement(el) {
 		var $el = $(el);
 		$messages.append($el);
 		scrollDownChat();
 
 	}
 
-	function scrollDownChat(){
+	function scrollDownChat() {
 
 		$messages.parent().closest('div')[0].scrollTop = $messages.parent().closest('div')[0].scrollHeight;
 	}
 
 	// Prevents input from having injected markup
-	function cleanInput (input) {
+	function cleanInput(input) {
 		return $('<div/>').text(input).text();
 	}
 
 	// Gets the color of a username through our hash function
-	function getUsernameColor (username) {
+	function getUsernameColor(username) {
 		// Compute hash code
 		var hash = 7;
 		for (var i = 0; i < username.length; i++) {
@@ -164,47 +202,46 @@ $(function () {
 	}
 
 
-	function makeSelectable(){
-		$( ".selectable" ).selectable({
-			selected: function( event, ui ) {
+	function makeSelectable() {
+		$(".selectable").selectable({
+			selected: function (event, ui) {
+				//Unselect everything and reselect the one that was clicked
 				$('.selectable .ui-selected').removeClass('ui-selected');
 				$(ui.selected).addClass('ui-selected');
 
-				//If selected lobby
 				var lobby_id = $(ui.selected).attr('lobby-id');
+				var user_id = $(ui.selected).attr('user-id');
 
-				if(lobby_id){
+				//If selected lobby
+				if (lobby_id) {
 					getLobbyInfo(lobby_id);
 				}
-
 				//if selected player
-				var user_id = $(ui.selected).attr('user-id');
-				if(user_id){
+				if (user_id) {
 					getPlayerInfo(user_id);
 				}
-
 			}
 		});
 	}
 
-	function getLobbyInfo(lobby_id){
+	function getLobbyInfo(lobby_id) {
 		$.ajax({
 			type: "POST",
 			url: '/Home/getLobbyInfo',
-			data: {id : lobby_id},
-			success: function(response){
+			data: {id: lobby_id},
+			success: function (response) {
 				$('.info-container').html(response);
 			}
 		});
 	}
 
 
-	function getPlayerInfo(user_id){
+	function getPlayerInfo(user_id) {
 		$.ajax({
 			type: "POST",
 			url: '/Home/getPlayerInfo',
-			data: {id : user_id},
-			success: function(response){
+			data: {id: user_id},
+			success: function (response) {
 				$('.info-container').html(response);
 			}
 		});
@@ -218,8 +255,16 @@ $(function () {
 
 		// When the client hits ENTER on their keyboard
 		if (event.which === 13) {
-				sendMessage();
-			}
+			sendMessage();
+		}
+	});
+
+	$('#msg_btn').click(function () {
+		sendMessage();
+	});
+
+	$('#leave-lobby-btn').click(function(){
+		sendUpdateLobby();
 	});
 
 });

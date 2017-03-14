@@ -1,8 +1,7 @@
 <?php
 echo $this->Html->css('base.css');
 echo $this->Html->css('cake.css');
-$title = 'Register | '.$this->viewVars['app_name'];
-$this->assign('title',$title);
+
 ?>
 
 <div class="form columns content">

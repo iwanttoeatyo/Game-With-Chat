@@ -1,8 +1,6 @@
 <?php
 echo $this->Html->css('base.css');
 echo $this->Html->css('cake.css');
-$title = 'Login | '.$this->viewVars['app_name'];
-$this->assign('title',$title);
 ?>
 
 <div class="users form">

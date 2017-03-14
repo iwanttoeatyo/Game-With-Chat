@@ -32,8 +32,7 @@ class HomeController extends AppController
 	 */
 	public function index()
 	{
-		$title = 'URGame';
-		$this->set(compact('title'));
+
 		$chat_id = 1; //global chat id
 
 		//get current user's username
@@ -49,6 +48,8 @@ class HomeController extends AppController
 		//get lobby list
 
 
+		$title = 'URGame';
+		$this->set(compact('title'));
 		$this->set(compact('messages', 'lobbies', 'chat_id',
 			'username', 'user_id', 'players'));
 		$this->render('index');
@@ -59,10 +60,19 @@ class HomeController extends AppController
 		$this->autoRender = false;
 		if ($this->request->is('post')) {
 			$players = $this->Player->getPlayerList();
-			$resultJ = json_encode($players);
-			$this->response->type('json');
-			$this->response->body($resultJ);
-			return $this->response;
+			$this->set(compact('players'));
+			$this->viewBuilder()->setTemplatePath('Element');
+			$this->render('player_list','ajax');
+		}
+	}
+
+	public function getLobbyList(){
+		$this->autoRender = false;
+		if ($this->request->is('post')) {
+			$lobbies = $this->Lobby->getLobbyList();
+			$this->set(compact('lobbies'));
+			$this->viewBuilder()->setTemplatePath('Element');
+			$this->render('lobby_list','ajax');
 		}
 	}
 
@@ -72,9 +82,9 @@ class HomeController extends AppController
 		$this->autoRender = false;
 		if ($this->request->is('post')) {
 			$lobby = $this->Lobby->getLobby($id);
-
+			$this->viewBuilder()->setTemplatePath('Element');
 			$this->set(compact('lobby', 'user_id'));
-			$this->render('lobbyInfo','ajax');
+			$this->render('lobby_info','ajax');
 		}
 	}
 
@@ -83,8 +93,9 @@ class HomeController extends AppController
 		$this->autoRender = false;
 		if ($this->request->is('post')) {
 			$player = $this->Player->getPlayer($id);
+			$this->viewBuilder()->setTemplatePath('Element');
 			$this->set(compact('player'));
-			$this->render('playerInfo','ajax');
+			$this->render('player_info','ajax');
 		}
 	}
 }

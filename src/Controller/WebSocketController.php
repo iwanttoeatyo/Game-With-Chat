@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Model\Entity\Chat;
 use App\Model\Entity\PlayerStatus;
 use Cake\ORM\TableRegistry;
 use DateTime;
@@ -57,12 +58,13 @@ class WebSocketController extends AppController implements MessageComponentInter
 				}
 
 				//Alert all people in global chat to update player list
-				foreach ($this->subscriptions as $user_id => $chat_id) {
-					if ($chat_id == 1) {
-						$this->users[$user_id]->send(json_encode(array('command' => 'updatePlayers')));
+				if($data->user_id){
+					foreach ($this->subscriptions as $socket_user_id => $chat_id) {
+						if ($chat_id == Chat::Global_Chat_Id) {
+							$this->users[$socket_user_id]->send(json_encode(array('command' => 'updatePlayerList')));
+						}
 					}
 				}
-
 
 				break;
 			case "message":
@@ -75,13 +77,25 @@ class WebSocketController extends AppController implements MessageComponentInter
 					if ($saved) {
 						echo dump($data);
 						$targetChat = $this->subscriptions[$conn->resourceId];
-						foreach ($this->subscriptions as $user_id => $chat_id) {
+						foreach ($this->subscriptions as $socket_user_id => $chat_id) {
 							if ($chat_id == $targetChat) {
-								$this->users[$user_id]->send(json_encode($data));
+								$this->users[$socket_user_id]->send(json_encode($data));
 							}
 						}
 					}
 				}
+				break;
+			case "updateLobby":
+				echo dump($data);
+				foreach ($this->subscriptions as $socket_user_id => $chat_id) {
+					if ($chat_id == $data->chat_id) {
+						$this->users[$socket_user_id]->send(json_encode(array('command' => 'updateLobby')));
+					}
+					if ($chat_id == Chat::Global_Chat_Id) {
+						$this->users[$socket_user_id]->send(json_encode(array('command' => 'updateLobbyList')));
+					}
+				}
+
 				break;
 		}
 	}

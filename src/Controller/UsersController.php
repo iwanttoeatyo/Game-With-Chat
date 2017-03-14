@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use App\Model\Entity\PlayerStatus;
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Controller\Component\AuthComponent;
 
@@ -53,6 +54,8 @@ class UsersController extends AppController
 				__('Incorrect username or password')
 			);
 		}
+		$title = 'Login | '.Configure::read('App.Name');
+		$this->set(compact('title'));
 	}
 
 	public function logout(){
@@ -88,6 +91,9 @@ class UsersController extends AppController
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
+
+		$title = 'Register | '.Configure::read('App.Name');
+		$this->set(compact('title'));
 		$this->set(compact('user'));
 		$this->set('_serialize', ['user']);
     }

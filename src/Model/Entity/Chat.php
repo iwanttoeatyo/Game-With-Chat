@@ -13,7 +13,7 @@ use Cake\ORM\Entity;
  */
 class Chat extends Entity
 {
-
+	Const Global_Chat_Id = 1;
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

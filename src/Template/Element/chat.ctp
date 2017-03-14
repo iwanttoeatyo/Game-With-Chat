@@ -15,7 +15,7 @@
 		<input type="hidden" id="user-id" value="<?=$user_id?>">
 		<input class="form-control" id="input-message" type="text" placeholder="Type a message">
 		<span class="input-group-addon chat-box-btn">
-           <button type="submit" class="btn btn-primary">Send </button>
+           <button type="button" id="send-msg-btn" class="btn btn-primary">Send </button>
     </span>
 	</div>
 </div>
