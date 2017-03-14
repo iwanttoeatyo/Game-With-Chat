@@ -114,8 +114,13 @@ $(function () {
 			($player2_name).text(data.player2_name);
 			addChatMessage({username: '*System', message: data.player2_name + " has joined as Player 2."});
 		}else{
-			$player2_name.text("Waiting for player to join...");
-			addChatMessage({username: '*System', message: "Player 2 has left."});
+
+			if($player2_name.text() != "Waiting for player to join...")
+			{
+				addChatMessage({username: '*System', message: "Player 2 has left."});
+				$player2_name.text("Waiting for player to join...");
+			}
+
 		}
 		if(data.lobby_status == "Full"){
 			$start_btn.removeAttr("disabled");
