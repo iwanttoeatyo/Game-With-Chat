@@ -24,7 +24,7 @@ $(function () {
 	var user_id = $('#user-id').val();
 	var player1_id = $('#player1-id').val();
 	var player2_id = $('#player2-id').val();
-	var is_player1 = (user_id == player1_id_);
+	var is_player1 = (user_id == player1_id);
 	var is_player2 = (user_id == player2_id);
 	var player_status;
 
