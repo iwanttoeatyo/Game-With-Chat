@@ -48,7 +48,6 @@ class WebSocketController extends AppController implements MessageComponentInter
 		$data = json_decode($msg);
 		switch ($data->command) {
 			case "joinChat":
-				echo dump($data);
 				//key = users connection id, value = chat_id
 				$this->subscriptions[$conn->resourceId] = $data->chat_id;
 				if ($data->user_id) {
@@ -75,7 +74,7 @@ class WebSocketController extends AppController implements MessageComponentInter
 					$saved = $this->Chat->sendMessage($this->subscriptions[$conn->resourceId], $data->msg);
 					//If message saved in db send it to all other users in same chat
 					if ($saved) {
-						echo dump($data);
+
 						$targetChat = $this->subscriptions[$conn->resourceId];
 						foreach ($this->subscriptions as $socket_user_id => $chat_id) {
 							if ($chat_id == $targetChat) {
@@ -86,7 +85,7 @@ class WebSocketController extends AppController implements MessageComponentInter
 				}
 				break;
 			case "updateLobby":
-				echo dump($data);
+
 				foreach ($this->subscriptions as $socket_user_id => $chat_id) {
 					if ($chat_id == $data->chat_id) {
 						$this->users[$socket_user_id]->send(json_encode(array('command' => 'updateLobby')));
