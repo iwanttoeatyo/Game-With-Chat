@@ -24,6 +24,7 @@ $(function () {
 	var user_id = $('#user-id').val();
 	var player1_id = $('#player1-id').val();
 	var player2_id = $('#player2-id').val();
+	var is_player1 = (user_id == player1_id_);
 	var is_player2 = (user_id == player2_id);
 	var player_status;
 
@@ -60,7 +61,7 @@ $(function () {
 			user_id: user_id
 		}));
 		//tell users to refresh lobbies if player 2 has joined.
-		if(is_player2){
+		if(is_player2 || is_player1){
 			sendUpdateLobby();
 		}
 		addChatMessage({username: '*System', message: 'You have connected to the server.'});
