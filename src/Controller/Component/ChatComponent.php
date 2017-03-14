@@ -60,7 +60,7 @@ class ChatComponent extends Component
 			return true;
 	}
 
-	public function create(){
+	public function createChat(){
 		$chat = $this->Chats->newEntity();
 		$chat->set('id',null);
 		$this->Chats->save($chat);

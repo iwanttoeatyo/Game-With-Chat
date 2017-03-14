@@ -33,6 +33,7 @@ class AppController extends Controller
 	public function beforeFilter(Event $event)
 	{
 		parent::beforeFilter($event);
+		//Allow everyone to do visit every page
 		$this->Auth->allow();
 
 	}
@@ -97,7 +98,7 @@ class AppController extends Controller
 
 	public function isAuthorized($user)
 	{
-		// Admin can access every action
+		// All users can access every action
 		if ($user) {
 			return true;
 		}

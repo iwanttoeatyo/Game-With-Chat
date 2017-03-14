@@ -34,7 +34,6 @@ $(function () {
 	var $lobbies = $('.lobbies');
 	var $players = $('.players');
 	var $player2_name = $('#player2-name');
-	var $start_btn = $('#start-lobby-btn');
 
 	if (game_id)
 		player_status = PLAYER_STATUS.GAME;
@@ -87,12 +86,21 @@ $(function () {
 					//Delay so we don't refresh lobby before database updates
 					setTimeout(updateLobby, 200);
 					break;
+				case "startLobby":
+					setTimeout(redirectToGame, 2000);
 			}
 	};
 
 	function sendUpdateLobby(){
 		conn.send(JSON.stringify({
 			command: "updateLobby",
+			chat_id: chat_id
+		}));
+	}
+
+	function sendStartLobby(){
+		conn.send(JSON.stringify({
+			command: "startLobby",
 			chat_id: chat_id
 		}));
 	}
@@ -106,6 +114,11 @@ $(function () {
 				refreshLobby(response);
 			}
 		});
+	}
+
+	//Reload page after game start should put user in game
+	function redirectToGame(){
+		location.reload();
 	}
 
 	function refreshLobby(data){
@@ -272,6 +285,10 @@ $(function () {
 
 	$('#leave-lobby-btn').click(function(){
 		sendUpdateLobby();
+	});
+
+	$('#start-lobby-btn').click(function(){
+		sendStartLobby();
 	});
 
 });

@@ -2,12 +2,16 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Core\Configure;
 
 /**
  * Games Controller
  *
  * @property \App\Model\Table\GamesTable $Games
  * @property \App\Controller\Component\CheckersComponent $Checkers
+ * @property \App\Controller\Component\GameComponent $Game
+ * @property \App\Controller\Component\ChatComponent $Chat
+ * @property \App\Controller\Component\LobbyComponent $Lobby
  */
 class GamesController extends AppController
 {
@@ -15,6 +19,9 @@ class GamesController extends AppController
    	public function initialize(){
 		parent::initialize();
 		$this->loadComponent('Checkers');
+		$this->loadComponent('Game');
+		$this->loadComponent('Chat');
+		$this->loadComponent('Lobby');
 	}
 
    /**
@@ -26,12 +33,28 @@ class GamesController extends AppController
      */
     public function view($id = null)
     {
-        $game = $this->Games->get($id, [
-            'contain' => ['Lobbies', 'GameStatuses']
-        ]);
+		//get current user's username
+		$username = $this->Auth->user('username');
+		$user_id = $this->Auth->user('id');
 
-        $this->set('game', $game);
-        $this->set('_serialize', ['game']);
+		$game = $this->Game->getGame($id);
+		$lobby = $this->Lobby->getLobby($game->get('lobby_id'));
+
+		//check if user is player
+		if (isset($user_id)) {
+			if ($lobby->get('player1_user_id') == $user_id) {
+				$is_player1 = true;
+			} else if ($lobby->get('player2_user_id') == $user_id) {
+				$is_player2 = true;
+			}
+		}
+		//get recent messages
+		$messages = $this->Chat->getMessages($lobby->get('chat_id'));
+
+		$title = $lobby->get('name') . ' | ' . Configure::read('App.Name');;
+
+		$this->set(compact('title', 'messages', 'lobby', 'game',
+			'username', 'user_id', 'is_player1', 'is_player2'));
     }
 
 	//expects game id as id

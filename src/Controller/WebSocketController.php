@@ -14,6 +14,10 @@ use App\Controller\Component\PlayerComponent;
  * chat.php
  * Send any incoming messages to all connected clients (except sender)
  *
+ * @property \App\Controller\Component\PlayerComponent $Player
+ * @property \App\Controller\Component\LobbyComponent $Lobby
+ * @property \App\Controller\Component\ChatComponent $Chat
+ *
  */
 class WebSocketController extends AppController implements MessageComponentInterface
 {
@@ -52,7 +56,7 @@ class WebSocketController extends AppController implements MessageComponentInter
 				$this->subscriptions[$conn->resourceId] = $data->chat_id;
 				if ($data->user_id) {
 					$this->user_ids[$conn->resourceId] = $data->user_id;
-					$this->Player->addPlayer($data->user_id, $data->player_status);
+					$this->Player->setPlayerStatus($data->user_id, $data->player_status);
 
 				}
 
@@ -85,13 +89,23 @@ class WebSocketController extends AppController implements MessageComponentInter
 				}
 				break;
 			case "updateLobby":
-
+				//Send update lobby to everyone watching this lobby
 				foreach ($this->subscriptions as $socket_user_id => $chat_id) {
 					if ($chat_id == $data->chat_id) {
 						$this->users[$socket_user_id]->send(json_encode(array('command' => 'updateLobby')));
 					}
+					//Send update lobby list to everyone on home page
 					if ($chat_id == Chat::Global_Chat_Id) {
 						$this->users[$socket_user_id]->send(json_encode(array('command' => 'updateLobbyList')));
+					}
+				}
+
+				break;
+			case "startLobby":
+				//Send start lobby command to everyone watching this lobby that just started
+				foreach ($this->subscriptions as $socket_user_id => $chat_id) {
+					if ($chat_id == $data->chat_id) {
+						$this->users[$socket_user_id]->send(json_encode(array('command' => 'startLobby')));
 					}
 				}
 

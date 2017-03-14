@@ -38,7 +38,7 @@ class PlayerComponent extends Component
 		return $players;
 	}
 
-	public function addPlayer($user_id, $player_status){
+	public function setPlayerStatus($user_id, $player_status){
 		$player = $this->getPlayer($user_id);
 		$player->set('player_status_id',$player_status);
 		$this->Users->save($player);

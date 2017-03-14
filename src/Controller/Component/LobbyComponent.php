@@ -14,12 +14,13 @@ use Cake\ORM\TableRegistry;
  * @property \App\Model\Table\LobbiesTable $Lobbies
  * @property \App\Controller\Component\ChatComponent $Chat
  * @property \App\Controller\Component\PlayerComponent $Player
+ * @property \App\Controller\Component\GameComponent $Game
  */
 class LobbyComponent extends Component
 {
 
 	// The other component your component uses
-	public $components = ['Chat', 'Player'];
+	public $components = ['Chat', 'Player', 'Game'];
 
 	public function initialize(array $config)
 	{
@@ -37,26 +38,26 @@ class LobbyComponent extends Component
 		return $lobbies;
 	}
 
-	public function tryToJoin($user_id, $lobby_id)
+	public function tryToAddPlayer2ToLobby($user_id, $lobby_id)
 	{
 		//if user already joined a lobby
 		$lobby = $this->findLobbyByUserId($user_id);
 		if (isset($lobby))
 			return true;
 
-		if ($this->isOpen($lobby_id)) {
-			if ($this->isUnlocked($lobby_id)) {
-				$this->lock($lobby_id);
-				return ($this->addPlayer($user_id, $lobby_id));
+		if ($this->isLobbyOpen($lobby_id)) {
+			if ($this->isLobbyUnlocked($lobby_id)) {
+				$this->lockLobby($lobby_id);
+				return ($this->addPlayer2ToLobby($user_id, $lobby_id));
 			}
 		}
 		return false;
 	}
 
-	public function create($user_id)
+	public function createLobby($user_id)
 	{
 		$lobby = $this->Lobbies->newEntity();
-		$chat_id = $this->Chat->create();
+		$chat_id = $this->Chat->createChat();
 		$lobby->set('chat_id', $chat_id);
 		$lobby->set('is_locked', Lobby::Unlocked);
 		$lobby->set('lobby_status_id', LobbyStatus::Open);
@@ -64,56 +65,56 @@ class LobbyComponent extends Component
 		$lobby->set('player1', $player1);
 		$lobby->set('name', $player1->username . '\'s Lobby');
 		$this->Lobbies->save($lobby);
-		return $lobby->id;
+		return $lobby->get('id');
 	}
 
 	public function getLobby($lobby_id)
 	{
 		$lobby = $this->Lobbies->get($lobby_id, [
-			'contain' => ['Player1', 'Player2', 'LobbyStatuses']
+			'contain' => ['Player1', 'Player2', 'LobbyStatuses',]
 		]);
 		return $lobby;
 	}
 
-	public function leave($user_id)
+	public function leaveLobby($user_id)
 	{
 		$lobby = $this->findLobbyByUserId($user_id);
 		if ($lobby) {
 			if ($lobby->player1_user_id == $user_id) {
 				//Lock lobby so nothing messes up when closing it
-				$this->lock($lobby->id);
-				$this->close($lobby->id);
+				$this->lockLobby($lobby->id);
+				$this->closeLobby($lobby->id);
 			} else if ($lobby->player2_user_id == $user_id) {
 				$lobby->set('player2_user_id', null);
 				//Open lobby up if its not locked
-				if ($this->isUnlocked($lobby->id))
+				if ($this->isLobbyUnlocked($lobby->id))
 					$lobby->set('lobby_status_id', LobbyStatus::Open);
 				$this->Lobbies->save($lobby);
 			}
 		}
 	}
 
-	public function close($lobby_id)
+	public function closeLobby($lobby_id)
 	{
 		$lobby = $this->getLobby($lobby_id);
 		$lobby->set('lobby_status_id', LobbyStatus::Closed);
 		return $this->Lobbies->save($lobby);
 	}
 
-	public function lock($lobby_id)
+	public function lockLobby($lobby_id)
 	{
 		$lobby = $this->getLobby($lobby_id);
 		$lobby->set('is_locked', Lobby::Locked);
 		return $this->Lobbies->save($lobby);
 	}
 
-	public function isUnlocked($lobby_id)
+	public function isLobbyUnlocked($lobby_id)
 	{
 		$lobby = $this->getLobby($lobby_id);
 		return !($lobby->get('is_locked'));
 	}
 
-	public function isOpen($lobby_id)
+	public function isLobbyOpen($lobby_id)
 	{
 		$lobby = $this->getLobby($lobby_id);
 		return ($lobby->get('lobby_status_id') == LobbyStatus::Open);
@@ -130,21 +131,33 @@ class LobbyComponent extends Component
 		return $lobby;
 	}
 
-	private function addPlayer($user_id, $lobby_id)
+	private function addPlayer2ToLobby($user_id, $lobby_id)
 	{
 		$lobby = $this->getLobby($lobby_id);
 		$player = $this->Player->getPlayer($user_id);
 		$lobby->set('player2', $player);
-		$lobby->set('lobby_status_id',LobbyStatus::Full);
-		$lobby->set('is_locked',Lobby::Unlocked);
+		$lobby->set('lobby_status_id', LobbyStatus::Full);
+		$lobby->set('is_locked', Lobby::Unlocked);
 		return $this->Lobbies->save($lobby);
 	}
 
-	public function start($lobby_id)
+	public function startLobby($lobby_id)
 	{
 		$lobby = $this->getLobby($lobby_id);
-		if($lobby->get('lobby_status_id') == LobbyStatus::Full){
-			//TODO make game
+		if ($this->isLobbyUnlocked($lobby_id)) {
+			if ($lobby->get('lobby_status_id') == LobbyStatus::Full) {
+				$game_id = $this->Game->createGameForLobby($lobby_id);
+				$lobby->set('lobby_status_id', LobbyStatus::Started);
+				$lobby_name = $lobby->get('player1')->get('username') . ' vs ' . $lobby->get('player2')->get('username');
+				$lobby->set('name', $lobby_name);
+				return $this->Lobbies->save($lobby);
+			}
 		}
+		return false;
+	}
+
+	public function getGameByLobbyId($id)
+	{
+
 	}
 }
