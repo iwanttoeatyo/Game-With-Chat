@@ -123,8 +123,8 @@ class LobbiesController extends AppController
 		$user_id = $this->Auth->user('id');
 		if ($this->request->is('post') && isset($user_id)) {
 			if ($this->Lobby->startLobby($id)) {
-				$game = $this->Lobby->getGameByLobbyId($id);
-				debug(dump($game));
+				$lobby = $this->Lobby->getLobby($id);
+				$game = $this->Game->findGameByLobbyId($lobby->get('id'));
 				return $this->redirect(['controller' => 'Games', 'action' => 'view', $game->id]);
 			}
 		}
