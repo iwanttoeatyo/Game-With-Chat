@@ -115,7 +115,8 @@ $(function () {
 			addChatMessage({username: '*System', message: data.player2_name + " has joined as Player 2."});
 		}else{
 
-			if($player2_name.text() != "Waiting for player to join...")
+			var string = $.trim($($player2_name).text());
+			if(string != "Waiting for player to join...")
 			{
 				addChatMessage({username: '*System', message: "Player 2 has left."});
 				$player2_name.text("Waiting for player to join...");
