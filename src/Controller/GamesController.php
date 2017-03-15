@@ -16,7 +16,8 @@ use Cake\Core\Configure;
 class GamesController extends AppController
 {
 
-   	public function initialize(){
+	public function initialize()
+	{
 		parent::initialize();
 		$this->loadComponent('Checkers');
 		$this->loadComponent('Game');
@@ -24,20 +25,18 @@ class GamesController extends AppController
 		$this->loadComponent('Lobby');
 	}
 
-   /**
-     * View method
-     *
-     * @param string|null $id Game id.
-     * @return \Cake\Network\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
+	public function view($id = null)
+	{
+		$game = $this->Game->getGame($id);
+		//If game is ended redirect to home
+		if ($this->Game->isGameEnded($id))
+			return $this->redirect(['controller' => 'Home', 'action' => 'index']);
+
 		//get current user's username
 		$username = $this->Auth->user('username');
 		$user_id = $this->Auth->user('id');
 
-		$game = $this->Game->getGame($id);
+
 		$lobby = $this->Lobby->getLobby($game->get('lobby_id'));
 
 		//check if user is player
@@ -55,30 +54,47 @@ class GamesController extends AppController
 
 		$this->set(compact('title', 'messages', 'lobby', 'game',
 			'username', 'user_id', 'is_player1', 'is_player2'));
-    }
+	}
 
 	//expects game id as id
 	//
-	public function getGameState(){
+	public function getGameState()
+	{
 		$this->autoRender = false;
 		$this->request->onlyAllow('ajax');
-		
+
 		$game_id = $this->request->getParam('id');
 
 		//TODO get game state from game entity
 	}
 
-	//expects forfeiter id as player
-	public function forfeit(){
+	public function forfeit()
+	{
 		$this->autoRender = false;
-		$this->request->onlyAllow('ajax');
-		
-		$uid = $this->request->getParam('player');
-		
-		//TODO forfeit player if they match
-		if(	$this->Checkers->validatePlayer($uid)){
+		$game_id = $this->request->getData('id');
+		$user_id = $this->Auth->user('id');
+		$resultJ = "null";
+		if ($this->request->is('post')) {
+			if ($this->Game->userIsPlayerInGame($game_id, $user_id)) {
 
+				if ($this->Game->tryForfeitGame($game_id, $user_id)) {
+					$game = $this->Game->getGame($game_id);
+					$lobby = $this->Lobby->getLobby($game->get('lobby_id'));
+					$winner = $game->get('winner');
+					$winner_name = "?";
+					if ($winner == 1) {
+						$winner_name = $lobby->get('player1')->get('username');
+					} else if ($winner == 2) {
+						$winner_name = $lobby->get('player2')->get('username');
+					}
+					$resultJ = json_encode(array($winner, $winner_name));
+				}
+				$this->response->type('json');
+				$this->response->body($resultJ);
+			}
 		}
+
+		return $this->response;
 	}
 
 

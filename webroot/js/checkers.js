@@ -21,7 +21,7 @@ window.onload = function() {
   //distance formula
   var dist = function (x1, y1, x2, y2) {
     return Math.sqrt(Math.pow((x1-x2),2)+Math.pow((y1-y2),2));
-  }
+  };
   //Piece object - there are 24 instances of them in a checkers game
   function Piece (element, position) {
     //linked DOM element
@@ -41,7 +41,7 @@ window.onload = function() {
     this.makeKing = function () {
       this.element.css("backgroundImage", "url('img/king"+this.player+".png')");
       this.king = true;
-    }
+    };
     //moves the piece
     this.move = function (tile) { 
       this.element.removeClass('selected'); 
@@ -64,12 +64,11 @@ window.onload = function() {
         this.makeKing();
 
       // check if someone wins
+			var Alert = new CustomAlert();
         if(player1CapturedPiece == 12){
-            var Alert = new CustomAlert();
             Alert.render("Player1 win! ↖(^▽^)↗");
         }
         else if(player2CapturedPiece == 12){
-            var Alert = new CustomAlert();
             Alert.render("Player2 win! ↖(^▽^)↗");
         } 
         
@@ -79,12 +78,11 @@ window.onload = function() {
     
     //tests if piece can jump anywhere
     this.canJumpAny = function () {
-      if(this.canOpponentJump([this.position[0]+2, this.position[1]+2]) ||
-         this.canOpponentJump([this.position[0]+2, this.position[1]-2]) ||
-         this.canOpponentJump([this.position[0]-2, this.position[1]+2]) ||
-         this.canOpponentJump([this.position[0]-2, this.position[1]-2])) {
-        return true;
-      } return false;
+      return (this.canOpponentJump([this.position[0]+2, this.position[1]+2]) ||
+              this.canOpponentJump([this.position[0]+2, this.position[1]-2]) ||
+              this.canOpponentJump([this.position[0]-2, this.position[1]+2]) ||
+              this.canOpponentJump([this.position[0]-2, this.position[1]-2])
+      );
     };
     
     //tests if an opponent jump can be made to a specific place
@@ -205,9 +203,7 @@ window.onload = function() {
     },
     //check if the location has an object
     isValidPlacetoMove: function (row, column) {
-      if(this.board[row][column] == 0) {
-        return true;
-      } return false;
+      return(this.board[row][column] == 0)
     },
     //change the active player - also changes div.turn's CSS
     changePlayerTurn: function () {
@@ -223,14 +219,10 @@ window.onload = function() {
           $("#player1Turn").css("background", "#BEEE62");
           $("#player2Turn").css("background", "transparent");
       }
-    },
-      
-    //reset the game
-    clear: function () {
-      location.reload(); 
     }
-  }
-  
+
+  };
+
   //initialize the board
   Board.initalize();
   

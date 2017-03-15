@@ -110,6 +110,13 @@ class WebSocketController extends AppController implements MessageComponentInter
 				}
 
 				break;
+			case "gameOver":
+				foreach ($this->subscriptions as $socket_user_id => $chat_id) {
+					if ($chat_id == $data->chat_id) {
+						$this->users[$socket_user_id]->send($msg);
+					}
+				}
+				break;
 		}
 	}
 

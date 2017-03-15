@@ -17,6 +17,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\PlayerStatus $player_status
  * @property \App\Model\Entity\Lobby $lobby_as_player1
  * @property \App\Model\Entity\Lobby $lobby_as_player2
+ * @property \App\Model\Entity\Score $score
  */
 class User extends Entity
 {

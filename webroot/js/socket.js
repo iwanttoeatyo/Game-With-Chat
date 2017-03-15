@@ -48,7 +48,7 @@ $(function () {
 //On websocket error
 	conn.onerror = function (e) {
 		addChatMessage({username: '*System', message: 'Can\'t connect to the server.'});
-	}
+	};
 
 //On Websocket first connection
 	conn.onopen = function (e) {
@@ -60,7 +60,8 @@ $(function () {
 			user_id: user_id
 		}));
 		//tell users to refresh lobbies if player 2 has joined.
-		if(is_player2 || is_player1){
+		//dont update games that have started
+		if (!game_id && (is_player2 || is_player1)) {
 			sendUpdateLobby();
 		}
 		addChatMessage({username: '*System', message: 'You have connected to the server.'});
@@ -88,24 +89,42 @@ $(function () {
 					break;
 				case "startLobby":
 					setTimeout(redirectToGame, 2000);
+					break;
+				case "gameOver":
+					displayWinner(data.winner, data.winner_name);
+					break;
 			}
 	};
 
-	function sendUpdateLobby(){
+	function displayWinner(winner, winner_name) {
+		var a = new CustomAlert();
+		a.render(winner_name + "(Player " + winner + ") Wins.")
+	}
+
+	function sendUpdateLobby() {
 		conn.send(JSON.stringify({
 			command: "updateLobby",
 			chat_id: chat_id
 		}));
 	}
 
-	function sendStartLobby(){
+	function sendStartLobby() {
 		conn.send(JSON.stringify({
 			command: "startLobby",
 			chat_id: chat_id
 		}));
 	}
 
-	function updateLobby(){
+	function sendWinner(winner, winner_name) {
+		conn.send(JSON.stringify({
+			command: "gameOver",
+			chat_id: chat_id,
+			winner: winner,
+			winner_name: winner_name
+		}));
+	}
+
+	function updateLobby() {
 		$.ajax({
 			type: "POST",
 			url: '/Lobbies/refreshLobby',
@@ -116,30 +135,32 @@ $(function () {
 		});
 	}
 
-	//Reload page after game start should put user in game
-	function redirectToGame(){
+	//Reload page after game start. should put user in game
+	function redirectToGame() {
 		location.reload();
 	}
 
-	function refreshLobby(data){
+	//Updates elements on page with data
+	//expects data to have
+	//player2_name and lobby_status
+	function refreshLobby(data) {
 		//fix player2 name
-		if(data.player2_name){
+		if (is_player2 && data.player2_name) {
 			($player2_name).text(data.player2_name);
 			addChatMessage({username: '*System', message: data.player2_name + " has joined as Player 2."});
-		}else{
+		} else {
 
 			var string = $.trim($($player2_name).text());
-			if(string != "Waiting for player to join...")
-			{
+			if (string != "Waiting for player to join...") {
 				addChatMessage({username: '*System', message: "Player 2 has left."});
 				$player2_name.text("Waiting for player to join...");
 			}
 
 		}
-		if(data.lobby_status == "Full"){
-			$start_btn.removeAttr("disabled");
-		}else{
-			$start_btn.attr("disabled",true);
+		if (data.lobby_status == "Full") {
+			$('#start-lobby-btn').removeAttr("disabled");
+		} else {
+			$('#start-lobby-btn').attr("disabled", true);
 		}
 	}
 
@@ -283,12 +304,35 @@ $(function () {
 		sendMessage();
 	});
 
-	$('#leave-lobby-btn').click(function(){
+	$('#leave-lobby-btn').click(function () {
 		sendUpdateLobby();
 	});
 
-	$('#start-lobby-btn').click(function(){
+	$('#start-lobby-btn').click(function () {
 		sendStartLobby();
 	});
 
+	$('#forfeit-game-btn').click(function (e) {
+		e.preventDefault();
+		if (window.confirm("Are you sure you want to forfeit?")) {
+			sendForfeit();
+		}
+	});
+
+	function sendForfeit() {
+		console.log(game_id);
+		$.ajax({
+			type: "POST",
+			url: '/Games/forfeit',
+			data: {id: game_id},
+			success: function (response) {
+				console.log(response);
+				if (response != null) {
+					sendWinner(response.winner, response.winner_name);
+				}else{
+					console.log("no forfeit");
+				}
+			}
+		});
+	}
 });

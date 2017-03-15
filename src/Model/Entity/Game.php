@@ -10,7 +10,7 @@ use Cake\ORM\Entity;
  * @property int $lobby_id
  * @property int $game_status_id
  * @property int $game_state
- * @property int $player_turn
+ * @property int $winner
  *
  * @property \App\Model\Entity\Lobby $lobby
  * @property \App\Model\Entity\GameStatus $game_status

@@ -3,6 +3,11 @@ echo $this->Html->script('socket.js');
 echo $this->Html->css('checkers.css');
 echo $this->Html->script('checkers.js');
 ?>
+<input type="hidden" id="game-id" value="<?= $game->id ?>">
+<input type="hidden" id="lobby-id" value="<?= $lobby->id ?>">
+<input type="hidden" id="player1-id" value="<?= $lobby->player1_user_id ?>">
+<input type="hidden" id="player2-id" value="<?= $lobby->player2_user_id ?>">
+
 <div class="col-xs-12 top-container no-padding">
 	<div class="col-xs-4 fill placeholder no-padding">
 
