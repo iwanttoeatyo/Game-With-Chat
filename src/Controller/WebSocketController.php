@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Model\Entity\Chat;
 use App\Model\Entity\PlayerStatus;
+use Cake\Core\Exception\Exception;
 use Cake\ORM\TableRegistry;
 use DateTime;
 use Ratchet\MessageComponentInterface;
@@ -75,7 +76,12 @@ class WebSocketController extends AppController implements MessageComponentInter
 					if (empty($this->user_ids[$conn->resourceId]))
 						$data->msg->username = "Guest " . $conn->resourceId;
 					//Save message in Database
-					$saved = $this->Chat->sendMessage($this->subscriptions[$conn->resourceId], $data->msg);
+					$saved = false;
+					try{
+						$saved = $this->Chat->sendMessage($this->subscriptions[$conn->resourceId], $data->msg);
+					} catch (Exception $e) {
+
+					}
 					//If message saved in db send it to all other users in same chat
 					if ($saved) {
 
