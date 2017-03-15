@@ -1,4 +1,8 @@
-window.onload = function() {    
+// gloabal variables
+var player2CapturedPiece = 0;
+var player1CapturedPiece = 0;
+window.onload = function() { 
+    console.log("player1capturedpiece "+player1CapturedPiece);
   //The initial setup
   var gameBoard = [ 
     [  0,  1,  0,  1,  0,  1,  0,  1 ],
@@ -26,6 +30,7 @@ window.onload = function() {
     this.position = position; 
     //which player's piece i it
     this.player = '';
+
     //figure out player by piece id
     if(this.element.attr("id") < 12)
       this.player = 1;
@@ -57,6 +62,17 @@ window.onload = function() {
       //if piece reaches the end of the row on opposite side crown it a king (can move all directions)
       if(!this.king && (this.position[0] == 0 || this.position[0] == 7 )) 
         this.makeKing();
+
+      // check if someone wins
+        if(player1CapturedPiece == 12){
+            var Alert = new CustomAlert();
+            Alert.render("Player1 win! ↖(^▽^)↗");
+        }
+        else if(player2CapturedPiece == 12){
+            var Alert = new CustomAlert();
+            Alert.render("Player2 win! ↖(^▽^)↗");
+        } 
+        
       Board.changePlayerTurn();
       return true;
     };
@@ -115,8 +131,16 @@ window.onload = function() {
     this.remove = function () {
       //remove it and delete it from the gameboard
       this.element.css("display", "none");
-      if(this.player == 1) $('#player2').append("<div class='capturedPiece'></div>");
-      if(this.player == 2) $('#player1').append("<div class='capturedPiece'></div>");
+      if(this.player == 1) {
+          $('#player2').append("<div class='capturedPiece'></div>");
+           player2CapturedPiece++;
+          console.log("player2CapturedPiece: "+player2CapturedPiece);
+      }
+      if(this.player == 2) {
+          $('#player1').append("<div class='capturedPiece'></div>");
+           player1CapturedPiece++;
+          console.log("player1CapturedPiece: "+player2CapturedPiece);
+      }
       Board.board[this.position[0]][this.position[1]] = 0;
       //reset position so it doesn't get picked up by the for loop in the canOpponentJump method
       this.position = [];
@@ -181,23 +205,26 @@ window.onload = function() {
     },
     //check if the location has an object
     isValidPlacetoMove: function (row, column) {
-      console.log(row); console.log(column); console.log(this.board);
       if(this.board[row][column] == 0) {
         return true;
       } return false;
     },
     //change the active player - also changes div.turn's CSS
     changePlayerTurn: function () {
+        //console.log("player turn: "+this.playerTurn);
       if(this.playerTurn == 1) {
         this.playerTurn = 2;
-        $('.turn').css("background", "linear-gradient(to right, transparent 50%, #BEEE62 50%)");
+          $("#player1Turn").css("background", "transparent");
+          $("#player2Turn").css("background", "#BEEE62");
         return;
       }
       if(this.playerTurn == 2) {
         this.playerTurn = 1;
-        $('.turn').css("background", "linear-gradient(to right, #BEEE62 50%, transparent 50%)");
+          $("#player1Turn").css("background", "#BEEE62");
+          $("#player2Turn").css("background", "transparent");
       }
     },
+      
     //reset the game
     clear: function () {
       location.reload(); 
@@ -263,3 +290,26 @@ window.onload = function() {
   });
   
 }
+
+// function to make a customized alert box    
+function CustomAlert(){
+    console.log("CustomAlert is called");
+    this.render = function(dialog){
+        var winW = window.innerWidth;
+        var winH = window.innerHeight;
+        var dialogoverlay = document.getElementById('dialogoverlay');
+        var dialogbox = document.getElementById('dialogbox');
+        dialogoverlay.style.display = "block";
+        dialogoverlay.style.height = winH+"px";
+        dialogbox.style.left = (winW/2) - (550 * .5)+"px";
+        dialogbox.style.top = "100px";
+        dialogbox.style.display = "block";
+        document.getElementById('dialogboxhead').innerHTML = "Congratulations!";
+        document.getElementById('dialogboxbody').innerHTML = "<h3>"+dialog+"</h3>";
+        document.getElementById('dialogboxfoot').innerHTML = '<button onclick="Alert.ok()">OK</button>';
+    }
+	this.ok = function(){
+		document.getElementById('dialogbox').style.display = "none";
+		document.getElementById('dialogoverlay').style.display = "none";
+	}
+} // end of CustomAlert()
