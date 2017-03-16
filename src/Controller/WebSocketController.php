@@ -28,6 +28,7 @@ class WebSocketController extends AppController implements MessageComponentInter
 	private $subscriptions;
 	private $Messages;
 
+
 	public function initialize()
 	{
 		$this->loadComponent('Player');
@@ -50,7 +51,14 @@ class WebSocketController extends AppController implements MessageComponentInter
 
 	public function onMessage(ConnectionInterface $conn, $msg)
 	{
+		$targetChat = 0; //If not able to get target chat then send to no chat
 		$data = json_decode($msg);
+		echo(dump($data));
+
+		//Get chat_id based on user connected if it exists.
+		if(isset( $this->subscriptions[$conn->resourceId]))
+			$targetChat = $this->subscriptions[$conn->resourceId];
+
 		switch ($data->command) {
 			case "joinChat":
 				//key = users connection id, value = chat_id
@@ -60,14 +68,9 @@ class WebSocketController extends AppController implements MessageComponentInter
 					$this->Player->setPlayerStatus($data->user_id, $data->player_status);
 
 				}
-
 				//Alert all people in global chat to update player list
-				if($data->user_id){
-					foreach ($this->subscriptions as $socket_user_id => $chat_id) {
-						if ($chat_id == Chat::Global_Chat_Id) {
-							$this->users[$socket_user_id]->send(json_encode(array('command' => 'updatePlayerList')));
-						}
-					}
+				if ($data->user_id) {
+					$this->emitCommandByChatId('updatePlayerList', Chat::Global_Chat_Id);
 				}
 
 				break;
@@ -79,49 +82,35 @@ class WebSocketController extends AppController implements MessageComponentInter
 					$saved = false;
 					try{
 						$saved = $this->Chat->sendMessage($this->subscriptions[$conn->resourceId], $data->msg);
-					} catch (Exception $e) {
-
+					}catch(\Exception $e){
+						echo dump($e);
 					}
+
 					//If message saved in db send it to all other users in same chat
 					if ($saved) {
-
-						$targetChat = $this->subscriptions[$conn->resourceId];
-						foreach ($this->subscriptions as $socket_user_id => $chat_id) {
-							if ($chat_id == $targetChat) {
-								$this->users[$socket_user_id]->send(json_encode($data));
-							}
-						}
+						$this->emitMessageByChatId($msg,$targetChat);
 					}
 				}
 				break;
+			case "closeLobby":
+				//Send update lobby to everyone watching this lobby
+				$this->emitCommandByChatId('closeLobby', $targetChat);
 			case "updateLobby":
 				//Send update lobby to everyone watching this lobby
-				foreach ($this->subscriptions as $socket_user_id => $chat_id) {
-					if ($chat_id == $data->chat_id) {
-						$this->users[$socket_user_id]->send(json_encode(array('command' => 'updateLobby')));
-					}
-					//Send update lobby list to everyone on home page
-					if ($chat_id == Chat::Global_Chat_Id) {
-						$this->users[$socket_user_id]->send(json_encode(array('command' => 'updateLobbyList')));
-					}
-				}
-
+				$this->emitCommandByChatId('updateLobby', $targetChat);
+			case "updateLobbyList":
+				$this->emitCommandByChatId('updateLobbyList', Chat::Global_Chat_Id);
 				break;
 			case "startLobby":
 				//Send start lobby command to everyone watching this lobby that just started
-				foreach ($this->subscriptions as $socket_user_id => $chat_id) {
-					if ($chat_id == $data->chat_id) {
-						$this->users[$socket_user_id]->send(json_encode(array('command' => 'startLobby')));
-					}
-				}
-
+				$this->emitCommandByChatId('startLobby', $targetChat);
 				break;
 			case "gameOver":
-				foreach ($this->subscriptions as $socket_user_id => $chat_id) {
-					if ($chat_id == $data->chat_id) {
-						$this->users[$socket_user_id]->send($msg);
-					}
-				}
+				//message contains command: 'gameOver', winner: 1 or 2, winner_name: 'asdsd'
+				$this->emitMessageByChatId($msg,$targetChat);
+				break;
+			case "gameUpdate":
+				$this->emitCommandByChatId('gameUpdate',$targetChat);
 				break;
 		}
 	}
@@ -150,5 +139,22 @@ class WebSocketController extends AppController implements MessageComponentInter
 		$conn->close();
 	}
 
+
+	//HELPER FUNCTIONS
+	public function emitCommandByChatId($command, $chat_id)
+	{
+		foreach ($this->subscriptions as $socket_user_id => $user_chat_id) {
+			if ($user_chat_id == $chat_id) {
+				$this->users[$socket_user_id]->send(json_encode(array('command' => $command)));
+			}
+		}
+	}
+	public function emitMessageByChatId($msg, $chat_id){
+		foreach ($this->subscriptions as $socket_user_id => $user_chat_id) {
+			if ($user_chat_id == $chat_id) {
+				$this->users[$socket_user_id]->send($msg);
+			}
+		}
+	}
 
 }

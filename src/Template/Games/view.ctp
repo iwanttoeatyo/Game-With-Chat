@@ -8,6 +8,17 @@ echo $this->Html->script('checkers.js');
 <input type="hidden" id="player1-id" value="<?= $lobby->player1_user_id ?>">
 <input type="hidden" id="player2-id" value="<?= $lobby->player2_user_id ?>">
 
+<!-- alert box will be displayed when a player wins -->
+<div id="dialogoverlay"></div>
+<div id="dialogbox">
+	<div>
+		<div id="dialogboxhead"></div>
+		<div id="dialogboxbody"></div>
+		<div id="dialogboxfoot"></div>
+	</div>
+</div>
+<!-- end of alert box -->
+
 <div class="col-xs-12 top-container no-padding">
 	<div class="col-xs-4 fill placeholder no-padding">
 

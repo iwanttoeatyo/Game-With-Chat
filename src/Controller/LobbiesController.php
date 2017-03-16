@@ -43,8 +43,9 @@ class LobbiesController extends AppController
 		if($lobby->get('lobby_status_id') == LobbyStatus::Started){
 			$game = $this->Game->findGameByLobbyId($lobby->get('id'));
 			return $this->redirect(['controller' => 'Games', 'action' => 'view', $game->get('id')]);
+		}else if($lobby->get('lobby_status_id') == LobbyStatus::Closed) {
+			return $this->redirect(['controller' => 'Home', 'action' => 'index']);
 		}
-
 		//check if user is player
 		if (isset($user_id)) {
 			if ($lobby->get('player1_user_id') == $user_id) {

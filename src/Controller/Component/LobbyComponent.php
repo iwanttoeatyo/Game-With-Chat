@@ -120,12 +120,13 @@ class LobbyComponent extends Component
 		return ($lobby->get('lobby_status_id') == LobbyStatus::Open);
 	}
 
+	//Returns lobby that is not closed
 	public function findLobbyByUserId($user_id)
 	{
 		$lobby = $this->Lobbies->find()
-			->where(['lobby_status_id !=' => LobbyStatus::Closed])
 			->where(['player1_user_id' => $user_id])
 			->orWhere(['player2_user_id' => $user_id])
+			->where(['lobby_status_id !=' => LobbyStatus::Closed])
 			->all()
 			->first();
 		return $lobby;

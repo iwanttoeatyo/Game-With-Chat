@@ -107,6 +107,22 @@ class GameComponent extends Component
 		$game = $this->getGame($game_id);
 		return ($game->get('game_status_id') == GameStatus::Ended);
 	}
+
+	public function updateGameState($user_id, $json_game_state)
+	{
+		$lobby = $this->Lobby->findLobbyByUserId($user_id);
+		if(isset($lobby)){
+			$game = $this->findGameByLobbyId($lobby->get('id'));
+			$game->set('game_state', $json_game_state);
+			$this->Games->save($game);
+			return true;
+		}
+	}
+	public function getGameState($game_id)
+	{
+		$game = $this->getGame($game_id);
+		return $game->get('game_state');
+	}
 //	public function setGameState($game_id,$JSON_game_state){
 //		$game = $this->getGame($game_id);
 //		$game->set('game_state',$JSON_game_state);

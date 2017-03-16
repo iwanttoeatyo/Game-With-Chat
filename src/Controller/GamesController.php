@@ -56,17 +56,6 @@ class GamesController extends AppController
 			'username', 'user_id', 'is_player1', 'is_player2'));
 	}
 
-	//expects game id as id
-	//
-	public function getGameState()
-	{
-		$this->autoRender = false;
-		$this->request->onlyAllow('ajax');
-
-		$game_id = $this->request->getParam('id');
-
-		//TODO get game state from game entity
-	}
 
 	public function forfeit()
 	{
@@ -87,7 +76,7 @@ class GamesController extends AppController
 					} else if ($winner == 2) {
 						$winner_name = $lobby->get('player2')->get('username');
 					}
-					$resultJ = json_encode(array($winner, $winner_name));
+					$resultJ = json_encode(['winner' => $winner, 'winner_name' => $winner_name]);
 				}
 				$this->response->type('json');
 				$this->response->body($resultJ);
@@ -97,5 +86,35 @@ class GamesController extends AppController
 		return $this->response;
 	}
 
+	//expects game id as id
+	//
+	public function getGameState()
+	{
+		$this->autoRender = false;
+		if ($this->request->is('post')) {
+
+			$game_id = $this->request->getData('id');
+			$game_state = $this->Game->getGameState($game_id);
+			$this->response->type('json');
+			$this->response->body($game_state);
+			return $this->response;
+		}
+	}
+
+	public function updateGameState()
+	{
+		$this->autoRender = false;
+		if ($this->request->is('post')) {
+			$user_id = $this->Auth->user('id');
+			if (isset($user_id)) {
+				$json_game_state = $this->request->getData('game_state');
+				$success = $this->Game->updateGameState($user_id, $json_game_state);
+				$resultJ = json_encode($success);
+				$this->response->type('json');
+				$this->response->body($resultJ);
+				return $this->response;
+			}
+		}
+	}
 
 }
