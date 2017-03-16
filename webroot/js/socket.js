@@ -394,8 +394,8 @@ function sendBoard(board) {
 	console.log(JSON.stringify({pieces:pieces, board: board}));
 }
 
-function updateGameState(board,pieces){
-	var json = JSON.stringify({board:board,pieces:pieces});
+function updateGameState(board,pieces,captured){
+	var json = JSON.stringify({board:board,pieces:pieces, captured:captured});
 	$.ajax({
 		type: "POST",
 		url: '/Games/updateGameState',
@@ -414,7 +414,7 @@ function getGameState() {
 		data: {id: game_id},
 		success: function (response) {
 			if(response.board){
-				setBoard(response.board,response.pieces);
+				setBoard(response.board,response.pieces, response.captured);
 			}
 		}
 	});

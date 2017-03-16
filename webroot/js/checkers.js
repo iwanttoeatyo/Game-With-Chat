@@ -1,6 +1,5 @@
 // gloabal variables
-var player2CapturedPiece = 0;
-var player1CapturedPiece = 0;
+var capturedPieces = new Array(3).fill(0);
 var Board;
 var pieces = [];
 $(function () {
@@ -49,7 +48,7 @@ $(function () {
 
 			//make sure piece doesn't go backwards if it's not a king
 			if (this.player == 1 && this.king == false) {
-				if (tile.position[0] < this.position[0]){
+				if (tile.position[0] < this.position[0]) {
 					return false;
 				}
 			} else if (this.player == 2 && this.king == false) {
@@ -69,11 +68,11 @@ $(function () {
 				this.makeKing();
 
 			// check if someone wins
-			if (player1CapturedPiece == 12) {
+			if (capturedPieces[1] == 12) {
 				var Alert = new CustomAlert();
 				Alert.render("Player1 win! ↖(^▽^)↗");
 			}
-			else if (player2CapturedPiece == 12) {
+			else if (capturedPieces[2] == 12) {
 				var Alert = new CustomAlert();
 				Alert.render("Player2 win! ↖(^▽^)↗");
 			}
@@ -139,13 +138,12 @@ $(function () {
 			this.element.css("display", "none");
 			if (this.player == 1) {
 				$('#player2').append("<div class='capturedPiece'></div>");
-				player2CapturedPiece++;
-				console.log("player2CapturedPiece: " + player2CapturedPiece);
+				capturedPieces[2]++
 			}
+
 			if (this.player == 2) {
 				$('#player1').append("<div class='capturedPiece'></div>");
-				player1CapturedPiece++;
-				console.log("player1CapturedPiece: " + player2CapturedPiece);
+				capturedPieces[1]++;
 			}
 			Board.board[this.position[0]][this.position[1]] = 0;
 			//reset position so it doesn't get picked up by the for loop in the canOpponentJump method
@@ -171,7 +169,7 @@ $(function () {
 		};
 	}
 
-	//Board object - controls logistics of game
+//Board object - controls logistics of game
 	Board = {
 		board: gameBoard,
 		playerTurn: 1,
@@ -220,11 +218,14 @@ $(function () {
 				var id = pieces[i].id;
 				var row = pieces[i].position[0];
 				var column = pieces[i].position[1];
+				if (row == null && column == null) {
+					continue;
+				}
 
-				if (pieces[i].player == 1 && row && column) {
+				if (pieces[i].player == 1) {
 					$('.player1pieces').append("<div class='piece' id='" + id + "' style='top:" +
 							this.dictionary[row] + ";left:" + this.dictionary[column] + ";'></div>");
-				} else if (pieces[i].player == 2  && row && column) {
+				} else if (pieces[i].player == 2) {
 					$('.player2pieces').append("<div class='piece' id='" + id + "' style='top:" +
 							this.dictionary[row] + ";left:" + this.dictionary[column] + ";'></div>");
 				}
@@ -250,28 +251,38 @@ $(function () {
 				$("#player1Turn").css("background", "#BEEE62");
 				$("#player2Turn").css("background", "transparent");
 			}
+		},
+		updatePlayerTurnDisplay: function (player) {
+			if (player == 2) {
+				$("#player1Turn").css("background", "transparent");
+				$("#player2Turn").css("background", "#BEEE62");
+			}
+			if (player == 1) {
+				$("#player1Turn").css("background", "#BEEE62");
+				$("#player2Turn").css("background", "transparent");
+			}
 		}
 
 	};
 
-	//initialize the board
+//initialize the board
 	Board.initialize();
-	//Check if there is a board in the server
+//Check if there is a board in the server
 	getGameState();
 	clickablePieces();
 	/***
 	 Events
 	 ***/
 
-	//select the piece on click if it is the player's turn
+//select the piece on click if it is the player's turn
 
 
-	//reset game when clear button is pressed
+//reset game when clear button is pressed
 	$('#cleargame').on("click", function () {
 		Board.clear();
 	});
 
-	//move piece when tile is clicked
+//move piece when tile is clicked
 	$('.tile').on("click", function () {
 		//make sure a piece is selected
 		if ($('.selected').length != 0) {
@@ -293,14 +304,14 @@ $(function () {
 							piece.element.addClass('selected');
 						}
 						//Move made Send Board
-						updateGameState(Board, pieces);
+						updateGameState(Board, pieces, capturedPieces);
 					}
 					//if it's regular then move it if no jumping is available
 				} else if (inRange == 'regular') {
 					if (!piece.canJumpAny()) {
 						piece.move(tile);
 						//Move made Send Board
-						updateGameState(Board, pieces);
+						updateGameState(Board, pieces, capturedPieces);
 					} else {
 						alert("You must jump when possible!");
 					}
@@ -309,7 +320,8 @@ $(function () {
 		}
 	});
 
-});
+})
+;
 
 // function to make a customized alert box    
 function CustomAlert() {
@@ -335,12 +347,15 @@ function CustomAlert() {
 	}
 } // end of CustomAlert()
 
-function setBoard(_board, _pieces) {
+function setBoard(_board, _pieces, _captured) {
 	Board.board = _board.board;
 	Board.playerTurn = _board.playerTurn;
 	Board.setPiecesInBoard(_pieces);
+	Board.updatePlayerTurnDisplay(_board.playerTurn);
+	setCapturedPieces(_captured);
 	clickablePieces();
 }
+
 
 function clickablePieces() {
 	$('.piece').on("click", function () {
@@ -356,4 +371,16 @@ function clickablePieces() {
 			}
 		}
 	});
+}
+
+function setCapturedPieces(_capturedPieces) {
+	capturedPieces[1] = _capturedPieces[1];
+	capturedPieces[2] = _capturedPieces[2];
+	$('.capturedPiece').remove();
+	for (var i = 0; i < capturedPieces[1]; i++) {
+		$('#player1').append("<div class='capturedPiece'></div>");
+	}
+	for (var i = 0; i < capturedPieces[2]; i++) {
+		$('#player2').append("<div class='capturedPiece'></div>");
+	}
 }
