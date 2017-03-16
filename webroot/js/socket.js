@@ -31,9 +31,9 @@ var $player2_name;
 
 $(function () {
 	//HTTPS for Server
-	//conn = new WebSocket('wss://' + document.domain + '/socket/');
+	conn = new WebSocket('wss://' + document.domain + '/socket/');
 	//Regular for local dev
-	conn = new WebSocket('ws://' + document.domain + ':2020');
+	//conn = new WebSocket('ws://' + document.domain + ':2020');
 
 	chat_id = $('#chat-id').val();
 	lobby_id = $('#lobby-id').val();

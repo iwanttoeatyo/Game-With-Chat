@@ -1542,16 +1542,16 @@
     "packages-dev": [
         {
             "name": "cakephp/bake",
-            "version": "1.3.2",
+            "version": "1.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/bake.git",
-                "reference": "2eaae494000c02447ce4dd5529143b0a7d0f7c98"
+                "reference": "bfa50d866b41cdf2ed43a360a213c63b0cd955e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/bake/zipball/2eaae494000c02447ce4dd5529143b0a7d0f7c98",
-                "reference": "2eaae494000c02447ce4dd5529143b0a7d0f7c98",
+                "url": "https://api.github.com/repos/cakephp/bake/zipball/bfa50d866b41cdf2ed43a360a213c63b0cd955e7",
+                "reference": "bfa50d866b41cdf2ed43a360a213c63b0cd955e7",
                 "shasum": ""
             },
             "require": {
@@ -1585,20 +1585,20 @@
                 "bake",
                 "cakephp"
             ],
-            "time": "2017-03-10T01:55:50+00:00"
+            "time": "2017-03-15T20:24:03+00:00"
         },
         {
             "name": "cakephp/debug_kit",
-            "version": "3.9.2",
+            "version": "3.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/debug_kit.git",
-                "reference": "a4d4250bc4b1724f6a13f58caaaed2a1f8684c33"
+                "reference": "20562b25e58da1efae7050c6c995ffe11726ad9a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/debug_kit/zipball/a4d4250bc4b1724f6a13f58caaaed2a1f8684c33",
-                "reference": "a4d4250bc4b1724f6a13f58caaaed2a1f8684c33",
+                "url": "https://api.github.com/repos/cakephp/debug_kit/zipball/20562b25e58da1efae7050c6c995ffe11726ad9a",
+                "reference": "20562b25e58da1efae7050c6c995ffe11726ad9a",
                 "shasum": ""
             },
             "require": {
@@ -1643,7 +1643,7 @@
                 "debug",
                 "kit"
             ],
-            "time": "2017-03-07T02:39:42+00:00"
+            "time": "2017-03-16T01:28:35+00:00"
         },
         {
             "name": "composer/ca-bundle",
