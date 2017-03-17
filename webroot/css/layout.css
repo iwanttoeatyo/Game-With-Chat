@@ -187,3 +187,10 @@ ul{
 .inline-block{
 	display:inline-block;
 }
+
+.king1{
+	background-image: url(../img/king1.png);
+}
+.king2{
+	 background-image: url(../img/king2.png);
+ }

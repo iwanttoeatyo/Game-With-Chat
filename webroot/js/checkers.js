@@ -35,7 +35,7 @@ $(function () {
 		//makes object a king
 		this.king = false;
 		this.makeKing = function () {
-			this.element.css("backgroundImage", "url('img/king" + this.player + ".png')");
+			this.element.addClass("king"+this.player);
 			this.king = true;
 		}
 		//moves the piece
@@ -66,16 +66,6 @@ $(function () {
 			//if piece reaches the end of the row on opposite side crown it a king (can move all directions)
 			if (!this.king && (this.position[0] == 0 || this.position[0] == 7 ))
 				this.makeKing();
-
-			// check if someone wins
-			if (capturedPieces[1] == 12) {
-				var Alert = new CustomAlert();
-				Alert.render("Player1 win! ↖(^▽^)↗");
-			}
-			else if (capturedPieces[2] == 12) {
-				var Alert = new CustomAlert();
-				Alert.render("Player2 win! ↖(^▽^)↗");
-			}
 
 			Board.changePlayerTurn();
 			return true;
@@ -215,20 +205,24 @@ $(function () {
 			for (var i = 0; i < pieces.length; i++) {
 				pieces[i].position = _pieces[i].position;
 				pieces[i].king = _pieces[i].king;
+				var kingable = "";
+				if(pieces[i].king == true){
+					kingable = " king" + pieces[i].player;
+				}
 				var id = pieces[i].id;
 				var row = pieces[i].position[0];
 				var column = pieces[i].position[1];
 				if (row == null && column == null) {
 					continue;
 				}
-
 				if (pieces[i].player == 1) {
-					$('.player1pieces').append("<div class='piece' id='" + id + "' style='top:" +
+					$('.player1pieces').append("<div class='piece"+ kingable +"' id='" + id + "' style='top:" +
 							this.dictionary[row] + ";left:" + this.dictionary[column] + ";'></div>");
 				} else if (pieces[i].player == 2) {
-					$('.player2pieces').append("<div class='piece' id='" + id + "' style='top:" +
+					$('.player2pieces').append("<div class='piece"+ kingable +"' id='" + id + "' style='top:" +
 							this.dictionary[row] + ";left:" + this.dictionary[column] + ";'></div>");
 				}
+
 			}
 
 		}

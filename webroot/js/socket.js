@@ -31,9 +31,9 @@ var $player2_name;
 
 $(function () {
 	//HTTPS for Server
-	conn = new WebSocket('wss://' + document.domain + '/socket/');
+	//conn = new WebSocket('wss://' + document.domain + '/socket/');
 	//Regular for local dev
-	//conn = new WebSocket('ws://' + document.domain + ':2020');
+	conn = new WebSocket('ws://' + document.domain + ':2020');
 
 	chat_id = $('#chat-id').val();
 	lobby_id = $('#lobby-id').val();
@@ -388,21 +388,30 @@ function getPlayerInfo(user_id) {
 	});
 }
 
-function sendBoard(board) {
-	console.log(board);
-	console.log(JSON.stringify(pieces));
-	console.log(JSON.stringify({pieces:pieces, board: board}));
-}
-
 function updateGameState(board,pieces,captured){
-	var json = JSON.stringify({board:board,pieces:pieces, captured:captured});
+	//Clean board to send less info
+	var newBoard = {};
+	var newPieces = [];
+	newBoard.board = board.board;
+	newBoard.playerTurn = board.playerTurn;
+	for (var i = 0;i<pieces.length;i++){
+		var newPiece = {};
+		newPiece.position = pieces[i].position;
+		newPiece.king = pieces[i].king;
+		newPieces[i] = newPiece;
+	}
+	var json = JSON.stringify({board:newBoard,pieces:newPieces, captured:captured});
 	$.ajax({
 		type: "POST",
 		url: '/Games/updateGameState',
 		data: {id: game_id, game_state:json},
 		success: function (response) {
-			//Assumes no failure
+			console.log(response);
+			//Check if winner
 			sendGameUpdate();
+			if(response.winner){
+				sendWinner(response.winner,response.winner_name);
+			}
 		}
 	});
 }

@@ -67,16 +67,8 @@ class GamesController extends AppController
 			if ($this->Game->userIsPlayerInGame($game_id, $user_id)) {
 
 				if ($this->Game->tryForfeitGame($game_id, $user_id)) {
-					$game = $this->Game->getGame($game_id);
-					$lobby = $this->Lobby->getLobby($game->get('lobby_id'));
-					$winner = $game->get('winner');
-					$winner_name = "?";
-					if ($winner == 1) {
-						$winner_name = $lobby->get('player1')->get('username');
-					} else if ($winner == 2) {
-						$winner_name = $lobby->get('player2')->get('username');
-					}
-					$resultJ = json_encode(['winner' => $winner, 'winner_name' => $winner_name]);
+					$winnerInfo = $this->Game->getWinnerInfo($game_id);
+					$resultJ = json_encode($winnerInfo);
 				}
 				$this->response->type('json');
 				$this->response->body($resultJ);
@@ -108,8 +100,17 @@ class GamesController extends AppController
 			$user_id = $this->Auth->user('id');
 			if (isset($user_id)) {
 				$json_game_state = $this->request->getData('game_state');
-				$success = $this->Game->updateGameState($user_id, $json_game_state);
-				$resultJ = json_encode($success);
+				$lobby = $this->Lobby->findLobbyByUserId($user_id);
+				$game_id = $this->Game->findGameByLobbyId($lobby->get('id'))->get('id');
+				$winnerInfo = [];
+				$winner = $this->Game->updateGameStateByUserId($user_id, $json_game_state);
+				if($winner == 1){
+					$winnerInfo = $this->Game->getWinnerInfo($game_id);
+				}
+				if($winner == 2){
+					$winnerInfo = $this->Game->getWinnerInfo($game_id);
+				}
+				$resultJ = json_encode($winnerInfo);
 				$this->response->type('json');
 				$this->response->body($resultJ);
 				return $this->response;
