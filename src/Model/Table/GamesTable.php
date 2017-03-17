@@ -48,7 +48,7 @@ class GamesTable extends Table
 
 		$this->addBehavior('Timestamp', [
 			'events' => [
-				'Model.beforeSave' => [
+				'Model.beforeRules' => [
 					'last_move_time' => 'always',
 				]
 			]
