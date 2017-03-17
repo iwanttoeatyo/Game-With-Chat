@@ -22,9 +22,10 @@ html,body{
 }
 .container{
 	max-width:1024px;
-	width:110vmin;
 	/*height full height -50 for header*/
 	height: calc(100% - 50px);
+	padding-left: 0;
+	padding-right: 0;
 }
 
 .top-container{

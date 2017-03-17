@@ -73,6 +73,7 @@ CREATE TABLE Games (
   game_status_id INT NOT NULL,
   game_state JSON NOT NULL,
   winner INT,
+  time_last_move TIMESTAMP,
   FOREIGN KEY (game_status_id) REFERENCES Game_Statuses (id),
   FOREIGN KEY (lobby_id) REFERENCES Lobbies(id),
   PRIMARY KEY (id)

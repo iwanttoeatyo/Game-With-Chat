@@ -45,6 +45,14 @@ class GamesTable extends Table
             'foreignKey' => 'game_status_id',
             'joinType' => 'INNER'
         ]);
+
+		$this->addBehavior('Timestamp', [
+			'events' => [
+				'Model.beforeSave' => [
+					'last_move_time' => 'always',
+				]
+			]
+		]);
     }
 
     /**

@@ -31,9 +31,9 @@ var $player2_name;
 
 $(function () {
 	//HTTPS for Server
-	//conn = new WebSocket('wss://' + document.domain + '/socket/');
+	conn = new WebSocket('wss://' + document.domain + '/socket/');
 	//Regular for local dev
-	conn = new WebSocket('ws://' + document.domain + ':2020');
+	//conn = new WebSocket('ws://' + document.domain + ':2020');
 
 	chat_id = $('#chat-id').val();
 	lobby_id = $('#lobby-id').val();
@@ -205,7 +205,6 @@ function sendForfeit() {
 		url: '/Games/forfeit',
 		data: {id: game_id},
 		success: function (response) {
-			console.log(response);
 			if (response != null && response.winner && response.winner_name) {
 				sendWinner(response.winner, response.winner_name);
 				conn.send(JSON.stringify({
@@ -226,7 +225,6 @@ function updateLobby() {
 		url: '/Lobbies/refreshLobby',
 		data: {id: lobby_id},
 		success: function (response) {
-			console.log(response);
 			refreshLobby(response);
 		}
 	});
@@ -406,7 +404,6 @@ function updateGameState(board,pieces,captured){
 		url: '/Games/updateGameState',
 		data: {id: game_id, game_state:json},
 		success: function (response) {
-			console.log(response);
 			//Check if winner
 			sendGameUpdate();
 			if(response.winner){
@@ -422,7 +419,7 @@ function getGameState() {
 		url: '/Games/getGameState',
 		data: {id: game_id},
 		success: function (response) {
-			if(response.board){
+			if(response.board.board){
 				setBoard(response.board,response.pieces, response.captured);
 			}
 		}

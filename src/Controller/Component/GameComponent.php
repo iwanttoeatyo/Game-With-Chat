@@ -50,7 +50,8 @@ class GameComponent extends Component
 		$game = $this->Games->newEntity();
 		$game->set('game_status_id', GameStatus::Active);
 		$game->set('lobby_id', $lobby_id);
-		$game->set('game_state', "{empty: 0}");
+		$game->set('game_state', "{board:{playerTurn:1}}");
+		$game->set('time_last_move',microtime());
 		$this->Games->save($game);
 		return $game->get('id');
 	}
@@ -113,6 +114,7 @@ class GameComponent extends Component
 		if (isset($lobby)) {
 			$game = $this->findGameByLobbyId($lobby->get('id'));
 			$game->set('game_state', $json_game_state);
+			$game->set('time_last_move',microtime());
 			$this->Games->save($game);
 			//Also check for winner
 			$winner = $this->checkForWinner($json_game_state);

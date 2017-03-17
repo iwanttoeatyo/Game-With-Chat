@@ -8,7 +8,6 @@ use Cake\Core\Configure;
  * Games Controller
  *
  * @property \App\Model\Table\GamesTable $Games
- * @property \App\Controller\Component\CheckersComponent $Checkers
  * @property \App\Controller\Component\GameComponent $Game
  * @property \App\Controller\Component\ChatComponent $Chat
  * @property \App\Controller\Component\LobbyComponent $Lobby
@@ -19,7 +18,6 @@ class GamesController extends AppController
 	public function initialize()
 	{
 		parent::initialize();
-		$this->loadComponent('Checkers');
 		$this->loadComponent('Game');
 		$this->loadComponent('Chat');
 		$this->loadComponent('Lobby');

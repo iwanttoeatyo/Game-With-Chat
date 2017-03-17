@@ -222,6 +222,7 @@ $(function () {
 					$('.player2pieces').append("<div class='piece"+ kingable +"' id='" + id + "' style='top:" +
 							this.dictionary[row] + ";left:" + this.dictionary[column] + ";'></div>");
 				}
+				pieces[i].element = $('#' + id);
 
 			}
 
@@ -233,7 +234,6 @@ $(function () {
 		},
 		//change the active player - also changes div.turn's CSS
 		changePlayerTurn: function () {
-			//console.log("player turn: "+this.playerTurn);
 			if (this.playerTurn == 1) {
 				this.playerTurn = 2;
 				$("#player1Turn").css("background", "transparent");
@@ -350,16 +350,14 @@ function setBoard(_board, _pieces, _captured) {
 	clickablePieces();
 }
 
-
-function clickablePieces() {
+function clickablePieces (){
+	$('.piece').unbind("click");
 	$('.piece').on("click", function () {
 		var selected;
 		var isPlayersTurn = ($(this).parent().attr("class").split(' ')[0] == "player" + Board.playerTurn + "pieces");
 		if (isPlayersTurn && player_num == Board.playerTurn) {
 			if ($(this).hasClass('selected')) selected = true;
-			$('.piece').each(function (index) {
-				$('.piece').eq(index).removeClass('selected')
-			});
+			$('.piece').removeClass('selected');
 			if (!selected) {
 				$(this).addClass('selected');
 			}
