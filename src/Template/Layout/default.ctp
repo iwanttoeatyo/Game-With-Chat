@@ -13,12 +13,12 @@
 
 	<?= $this->Html->script('jquery-3.1.1.min.js') ?>
 	<?= $this->Html->script('jquery-ui.min.js') ?>
-	<?= $this->Html->script('bootstrap.js') ?>
+	<?= $this->Html->script('bootstrap.min.js') ?>
 	<?= $this->fetch('script') ?>
 
 	<?= $this->Html->css('jquery-ui.min.css') ?>
-	<?= $this->Html->css('bootstrap.css') ?>
-	<?= $this->Html->css('bootstrap-theme.css') ?>
+	<?= $this->Html->css('bootstrap.min.css') ?>
+	<?= $this->Html->css('bootstrap-theme.min.css') ?>
 	<?= $this->Html->css('layout.css') ?>
 	<?= $this->fetch('css') ?>
 </head>
