@@ -1,7 +1,7 @@
 <?php
-echo $this->Html->script('socket.js',['async']);
+echo $this->Html->script('socket.js');
 echo $this->Html->css('checkers.css');
-echo $this->Html->script('checkers.js',['async']);
+echo $this->Html->script('checkers.js');
 ?>
 <input type="hidden" id="game-id" value="<?= $game->id ?>">
 <input type="hidden" id="lobby-id" value="<?= $lobby->id ?>">

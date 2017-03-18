@@ -1,5 +1,5 @@
 <?php
-echo $this->Html->script('socket.js',['async']);
+echo $this->Html->script('socket.js');
 echo $this->Html->css('checkers.css');
 
 ?>
