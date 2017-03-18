@@ -1,10 +1,10 @@
 <?php
 namespace App\Shell;
 
+use App\Controller\WebSocket;
 use Cake\Console\Shell;
 use Ratchet\Http\HttpServer;
 use Ratchet\Server\IoServer;
-use App\Controller\WebSocketController;
 use Ratchet\WebSocket\WsServer;
 use Cake\Controller\ComponentRegistry;
 
@@ -38,7 +38,7 @@ class WebSocketShell extends Shell
 		$server = IoServer::factory(
 			new HttpServer(
 				new WsServer(
-					new WebSocketController()
+					new \App\Controller\WebSocket()
 				)
 			),
 			2020

@@ -20,7 +20,7 @@ use App\Controller\Component\PlayerComponent;
  * @property \App\Controller\Component\ChatComponent $Chat
  *
  */
-class WebSocketController extends AppController implements MessageComponentInterface
+class WebSocket extends AppController implements MessageComponentInterface
 {
 	protected $clients;
 	private $users;
@@ -88,7 +88,7 @@ class WebSocketController extends AppController implements MessageComponentInter
 
 					//If message saved in db send it to all other users in same chat
 					if ($saved) {
-						$this->emitMessageByChatId($msg,$targetChat);
+						$this->emitMessageByChatId(json_encode($data),$targetChat);
 					}
 				}
 				break;
