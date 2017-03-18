@@ -12,8 +12,8 @@
 	<?= $this->fetch('meta') ?>
 
 	<?= $this->Html->script('jquery-3.1.1.min.js') ?>
-	<?= $this->Html->script('jquery-ui.min.js') ?>
-	<?= $this->Html->script('bootstrap.min.js') ?>
+	<?= $this->Html->script('jquery-ui.min.js',['async']) ?>
+	<?= $this->Html->script('bootstrap.min.js',['async']) ?>
 	<?= $this->fetch('script') ?>
 
 	<?= $this->Html->css('jquery-ui.min.css') ?>

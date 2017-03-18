@@ -1,5 +1,5 @@
 <?php
-echo $this->Html->script('socket.js');
+echo $this->Html->script('socket.js',['async']);
 ?>
 <div class="col-xs-12 top-container no-padding">
 	<div class="col-xs-4 fill placeholder no-padding">
