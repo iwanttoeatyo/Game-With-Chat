@@ -39,9 +39,12 @@ echo $this->Html->script('socket.js');
 			<div class="welcome-header">
 				<h1>Welcome to URGame</h1>
 			</div>
-			<p>text </p>
-			<div class="info-container">
-
+			<p>Create or Join a lobby to play checkers with another human.</p>
+			<p>Click on the Lobbies or Players in the lists for detailed information.</p>
+			<?php if(empty($user_id)):?>
+			<p>You must login to Join or Create lobbies.</p>
+			<?php endif;?>
+				<div class="info-container">
 			</div>
 		</div>
 	</div>

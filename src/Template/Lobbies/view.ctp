@@ -71,7 +71,7 @@ echo $this->Html->css('checkers.css');
 			<?php if ($lobby->lobby_status_id != \App\Model\Entity\LobbyStatus::Full) : ?>
 							disabled
 			<?php endif; ?>
-								type="submit">Start Lobby
+								type="submit">Start Game
 				</button>
 			</form>
 		<?php endif; ?>
