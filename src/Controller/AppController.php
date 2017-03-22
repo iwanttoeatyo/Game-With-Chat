@@ -29,21 +29,10 @@ use Cake\Event\Event;
 class AppController extends Controller
 {
 
-
-	public function beforeFilter(Event $event)
-	{
-		parent::beforeFilter($event);
-		//Allow everyone to do visit every page
-		$this->Auth->allow();
-
-	}
     /**
      * Initialization hook method.
-     *
      * Use this method to add common initialization code like loading components.
-     *
-     * e.g. `$this->loadComponent('Security');`
-     *
+	 *
      * @return void
      */
     public function initialize()
@@ -67,8 +56,6 @@ class AppController extends Controller
 			]
 		]);
 		$this->loadComponent('Cookie', ['expiry' => '1 day']);
-
-
         /*
          * Enable the following components for recommended CakePHP security settings.
          * see http://book.cakephp.org/3.0/en/controllers/components/security.html
@@ -77,6 +64,14 @@ class AppController extends Controller
         //$this->loadComponent('Csrf');
 
     }
+
+	public function beforeFilter(Event $event)
+	{
+		parent::beforeFilter($event);
+		//Allow everyone to do visit every page
+		$this->Auth->allow();
+
+	}
 
     /**
      * Before render callback.

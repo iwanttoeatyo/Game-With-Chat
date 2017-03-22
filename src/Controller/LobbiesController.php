@@ -1,16 +1,14 @@
 <?php
 namespace App\Controller;
 
-use App\Controller\AppController;
-use App\Model\Entity\Lobby;
-use App\Model\Entity\Chat;
 use App\Model\Entity\LobbyStatus;
 use Cake\Core\Configure;
-use Cake\Network\Exception\MethodNotAllowedException;
-use Cake\Network\Exception\UnauthorizedException;
+use Cake\Network\Exception\NotFoundException;
 
 /**
  * Lobbies Controller
+ *
+ * @package App\Controller
  *
  * @property \App\Model\Table\LobbiesTable $Lobbies
  * @property \App\Model\Table\ChatsTable $Chats
@@ -22,6 +20,9 @@ use Cake\Network\Exception\UnauthorizedException;
 class LobbiesController extends AppController
 {
 
+	/**
+	 *	Loads Models and components for this controller to use
+	 */
 	public function initialize()
 	{
 		parent::initialize();
@@ -32,18 +33,30 @@ class LobbiesController extends AppController
 		$this->loadComponent('Game');
 	}
 
-
+	/**
+	 * Displays a lobby view
+	 *
+	 * @param null $id
+	 * @return \Cake\Http\Response
+	 * @throws \Cake\Network\Exception\NotFoundException When the lobby could not be found by id
+	 */
 	public function view($id = null)
 	{
+		try{
+			$lobby = $this->Lobby->getLobby($id);
+		}catch (\Exception $e){
+			throw new NotFoundException(__('Lobby not found'));
+		}
 		//get current user's username
 		$username = $this->Auth->user('username');
 		$user_id = $this->Auth->user('id');
 
-		$lobby = $this->Lobby->getLobby($id);
-		if($lobby->get('lobby_status_id') == LobbyStatus::Started){
+		//If lobby is started redirect to GamesController view
+		//if closed redirect home
+		if ($lobby->get('lobby_status_id') == LobbyStatus::Started) {
 			$game = $this->Game->findGameByLobbyId($lobby->get('id'));
 			return $this->redirect(['controller' => 'Games', 'action' => 'view', $game->get('id')]);
-		}else if($lobby->get('lobby_status_id') == LobbyStatus::Closed) {
+		} else if ($lobby->get('lobby_status_id') == LobbyStatus::Closed) {
 			return $this->redirect(['controller' => 'Home', 'action' => 'index']);
 		}
 		//check if user is player
@@ -57,15 +70,18 @@ class LobbiesController extends AppController
 		//get recent messages
 		$messages = $this->Chat->getMessages($lobby->get('chat_id'));
 
+		//set page title
 		$title = $lobby->name . ' | ' . Configure::read('App.Name');;
 
+		//make these objects accessible in the template
 		$this->set(compact('title', 'messages', 'lobby',
 			'username', 'user_id', 'is_player1', 'is_player2'));
 	}
 
-	//If logged in and lobby is open and user isn't in a lobby
-	//then this user will join this lobby.
-	//All clients will view lobby.
+	/**
+	 * @param int|void $id
+	 * @return \Cake\Http\Response|null
+	 */
 	public function join($id = null)
 	{
 		if ($this->request->is('post')) {
@@ -83,6 +99,9 @@ class LobbiesController extends AppController
 	}
 
 	//Create new Lobby and redirect to it
+	/**
+	 * @return \Cake\Http\Response|null
+	 */
 	public function add()
 	{
 		$this->autoRender = false;
@@ -109,6 +128,9 @@ class LobbiesController extends AppController
 
 
 	//Leave lobby
+	/**
+	 * @return \Cake\Http\Response|null
+	 */
 	public function leave()
 	{
 		$user_id = $this->Auth->user('id');
@@ -119,6 +141,10 @@ class LobbiesController extends AppController
 	}
 
 
+	/**
+	 * @param null $id
+	 * @return \Cake\Http\Response|null
+	 */
 	public function start($id = null)
 	{
 		$user_id = $this->Auth->user('id');
@@ -135,6 +161,9 @@ class LobbiesController extends AppController
 
 	//Returns the player2s name and lobby status
 	//from ajax request in lobby view.
+	/**
+	 * @return \Cake\Http\Response|null
+	 */
 	public function refreshLobby()
 	{
 		$this->autoRender = false;

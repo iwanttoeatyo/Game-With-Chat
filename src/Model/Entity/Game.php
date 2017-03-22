@@ -11,7 +11,7 @@ use Cake\ORM\Entity;
  * @property int $game_status_id
  * @property int $game_state
  * @property int $winner
- * @property \Cake\I18n\Time $last_move_time
+ * @property \Cake\I18n\Time $modified_date
  *
  * @property \App\Model\Entity\Lobby $lobby
  * @property \App\Model\Entity\GameStatus $game_status

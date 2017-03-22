@@ -3,7 +3,6 @@ namespace App\Controller\Component;
 
 use App\Model\Entity\GameStatus;
 use Cake\Controller\Component;
-use Cake\Controller\ComponentRegistry;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -27,6 +26,36 @@ class GameComponent extends Component
 		$this->Scores = TableRegistry::get('Scores');
 	}
 
+	public function getGame($game_id)
+	{
+		$game = $this->Games->get($game_id, [
+			'contain' => ['Lobbies', 'GameStatuses']
+		]);
+		return $game;
+	}
+
+	public function getGameState($game_id)
+	{
+		$game = $this->getGame($game_id);
+		return $game->get('game_state');
+	}
+
+	public function getWinnerInfo($game_id)
+	{
+		$winnerInfo = [];
+		$game = $this->getGame($game_id);
+		$lobby = $this->Lobby->getLobby($game->get('lobby_id'));
+		if ($game->get('winner') == 1) {
+			$winnerInfo['winner'] = 1;
+			$winnerInfo['winner_name'] = $lobby->get('player1')->get('username');
+		} else if ($game->get('winner') == 2) {
+			$winnerInfo['winner'] = 2;
+			$winnerInfo['winner_name'] = $lobby->get('player2')->get('username');
+		}
+
+		return $winnerInfo;
+	}
+
 	public function findGameByLobbyId($lobby_id)
 	{
 		$game = $this->Games->find()
@@ -34,14 +63,6 @@ class GameComponent extends Component
 			->contain(['Lobbies', 'GameStatuses'])
 			->all()
 			->first();
-		return $game;
-	}
-
-	public function getGame($game_id)
-	{
-		$game = $this->Games->get($game_id, [
-			'contain' => ['Lobbies', 'GameStatuses']
-		]);
 		return $game;
 	}
 
@@ -55,33 +76,6 @@ class GameComponent extends Component
 		return $game->get('id');
 	}
 
-
-	public function tryForfeitGame($game_id, $user_id)
-	{
-		if ($this->isGameActive($game_id)) {
-			$game = $this->getGame($game_id);
-			$lobby = $game->get('lobby');
-			//Player who didn't forfeit is the winner
-			if ($lobby->get('player1_user_id') == $user_id) {
-				//other player won aka player 2
-				$this->setWinnerAndEndGame($game_id, 2);
-			}
-			if ($lobby->get('player2_user_id') == $user_id) {
-				$this->setWinnerAndEndGame($game_id, 1);
-			}
-			return true;
-		}
-		return false;
-	}
-
-	public function userIsPlayerInGame($game_id, $user_id)
-	{
-		$game = $this->getGame($game_id);
-		$lobby = $game->get('lobby');
-		return (($lobby->get('player1_user_id') == $user_id) ||
-			($lobby->get('player2_user_id') == $user_id));
-	}
-
 	public function updateScores($winner_id, $loser_id)
 	{
 		$winner = $this->Player->getPlayer($winner_id);
@@ -92,18 +86,6 @@ class GameComponent extends Component
 		$loser_score = $loser->get('score');
 		$loser_score->set('loss_count', $loser_score->get('loss_count') + 1);
 		$this->Scores->save($loser_score);
-	}
-
-	public function isGameActive($game_id)
-	{
-		$game = $this->getGame($game_id);
-		return ($game->get('game_status_id') == GameStatus::Active);
-	}
-
-	public function isGameEnded($game_id)
-	{
-		$game = $this->getGame($game_id);
-		return ($game->get('game_status_id') == GameStatus::Ended);
 	}
 
 	public function updateGameStateByUserId($user_id, $json_game_state)
@@ -128,42 +110,23 @@ class GameComponent extends Component
 		return $winner;
 	}
 
-	public function getGameState($game_id)
+	public function tryForfeitGame($game_id, $user_id)
 	{
-		$game = $this->getGame($game_id);
-		return $game->get('game_state');
-	}
-
-	public function checkForWinner($json_game_state)
-	{
-		$game_state = json_decode($json_game_state);
-		$player1_captured_pieces = $game_state->captured[1];
-		$player2_captured_pieces = $game_state->captured[2];
-		if ($player1_captured_pieces == 12) {
-			return 1;
+		if ($this->isGameActive($game_id)) {
+			$game = $this->getGame($game_id);
+			$lobby = $game->get('lobby');
+			//Player who didn't forfeit is the winner
+			if ($lobby->get('player1_user_id') == $user_id) {
+				//other player won aka player 2
+				$this->setWinnerAndEndGame($game_id, 2);
+			}
+			if ($lobby->get('player2_user_id') == $user_id) {
+				$this->setWinnerAndEndGame($game_id, 1);
+			}
+			return true;
 		}
-		if ($player2_captured_pieces == 12) {
-			return 2;
-		}
-		return 0;
+		return false;
 	}
-
-	public function getWinnerInfo($game_id)
-	{
-		$winnerInfo = [];
-		$game = $this->getGame($game_id);
-		$lobby = $this->Lobby->getLobby($game->get('lobby_id'));
-		if ($game->get('winner') == 1) {
-			$winnerInfo['winner'] = 1;
-			$winnerInfo['winner_name'] = $lobby->get('player1')->get('username');
-		} else if ($game->get('winner') == 2) {
-			$winnerInfo['winner'] = 2;
-			$winnerInfo['winner_name'] = $lobby->get('player2')->get('username');
-		}
-
-		return $winnerInfo;
-	}
-
 
 	public function setWinnerAndEndGame($game_id, $winner)
 	{
@@ -188,4 +151,39 @@ class GameComponent extends Component
 		$this->Lobby->closeLobby($game->get('lobby_id'));
 		$this->updateScores($winner_id, $loser_id);
 	}
+
+	public function checkForWinner($json_game_state)
+	{
+		$game_state = json_decode($json_game_state);
+		$player1_captured_pieces = $game_state->captured[1];
+		$player2_captured_pieces = $game_state->captured[2];
+		if ($player1_captured_pieces == 12) {
+			return 1;
+		}
+		if ($player2_captured_pieces == 12) {
+			return 2;
+		}
+		return 0;
+	}
+
+	public function userIsPlayerInGame($game_id, $user_id)
+	{
+		$game = $this->getGame($game_id);
+		$lobby = $game->get('lobby');
+		return (($lobby->get('player1_user_id') == $user_id) ||
+			($lobby->get('player2_user_id') == $user_id));
+	}
+
+	public function isGameActive($game_id)
+	{
+		$game = $this->getGame($game_id);
+		return ($game->get('game_status_id') == GameStatus::Active);
+	}
+
+	public function isGameEnded($game_id)
+	{
+		$game = $this->getGame($game_id);
+		return ($game->get('game_status_id') == GameStatus::Ended);
+	}
+
 }

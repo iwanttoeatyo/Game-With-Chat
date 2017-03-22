@@ -3,20 +3,15 @@
 namespace App\Controller;
 
 use App\Model\Entity\Chat;
-use App\Model\Entity\PlayerStatus;
-use Cake\Core\Exception\Exception;
-use Cake\ORM\TableRegistry;
-use DateTime;
-use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
-use App\Controller\Component\PlayerComponent;
+use Ratchet\MessageComponentInterface;
 
 /**
- * chat.php
- * Send any incoming messages to all connected clients (except sender)
+ * WebSocket.php
+ * Send any incoming messages to all clients grouped by a chat_id
+ * Chat messages are saved into the database
  *
  * @property \App\Controller\Component\PlayerComponent $Player
- * @property \App\Controller\Component\LobbyComponent $Lobby
  * @property \App\Controller\Component\ChatComponent $Chat
  *
  */
@@ -26,15 +21,11 @@ class WebSocket extends AppController implements MessageComponentInterface
 	private $users;
 	private $user_ids;
 	private $subscriptions;
-	private $Messages;
-
 
 	public function initialize()
 	{
 		$this->loadComponent('Player');
-		$this->loadComponent('Lobby');
 		$this->loadComponent('Chat');
-		$this->Messages = TableRegistry::get('Messages');
 		$this->clients = new \SplObjectStorage;
 		$this->subscriptions = [];
 		$this->users = [];
@@ -53,10 +44,10 @@ class WebSocket extends AppController implements MessageComponentInterface
 	{
 		$targetChat = 0; //If not able to get target chat then send to no chat
 		$data = json_decode($msg);
-		echo(dump($data));
-
+		//logged to logs/cli-debug.log
+		$this->log($data, 'info');
 		//Get chat_id based on user connected if it exists.
-		if(isset( $this->subscriptions[$conn->resourceId]))
+		if (isset($this->subscriptions[$conn->resourceId]))
 			$targetChat = $this->subscriptions[$conn->resourceId];
 
 		switch ($data->command) {
@@ -78,17 +69,31 @@ class WebSocket extends AppController implements MessageComponentInterface
 				if (isset($this->subscriptions[$conn->resourceId])) {
 					if (empty($this->user_ids[$conn->resourceId]))
 						$data->msg->username = "Guest " . $conn->resourceId;
-					//Save message in Database
 					$saved = false;
-					try{
-						$saved = $this->Chat->sendMessage($this->subscriptions[$conn->resourceId], $data->msg);
-					}catch(\Exception $e){
-						echo dump($e);
+
+					//Check if message is not unicode
+					//Respond to user sending message
+					if (strlen($msg) != strlen(utf8_decode($msg)))
+					{
+						$this->users[$conn->resourceId]->send(json_encode(array(
+							'command' => 'message',
+							'msg' => [
+								'username' => '*System',
+								'message' => 'Your message was not sent because it contained unsupported characters.'
+							]
+						)));
+						break;
+					}
+					//Will throw exception on non standard text
+					try {
+						$saved = $this->Chat->createMessage($this->subscriptions[$conn->resourceId], $data->msg);
+					} catch (\Exception $e) {
+						$this->log($e);
 					}
 
-					//If message saved in db send it to all other users in same chat
+					//If message saved in db send it to all users in same chat
 					if ($saved) {
-						$this->emitMessageByChatId(json_encode($data),$targetChat);
+						$this->emitMessageByChatId(json_encode($data), $targetChat);
 					}
 				}
 				break;
@@ -107,10 +112,10 @@ class WebSocket extends AppController implements MessageComponentInterface
 				break;
 			case "gameOver":
 				//message contains command: 'gameOver', winner: 1 or 2, winner_name: 'asdsd'
-				$this->emitMessageByChatId($msg,$targetChat);
+				$this->emitMessageByChatId($msg, $targetChat);
 				break;
 			case "gameUpdate":
-				$this->emitCommandByChatId('gameUpdate',$targetChat);
+				$this->emitCommandByChatId('gameUpdate', $targetChat);
 				break;
 		}
 	}
@@ -121,7 +126,7 @@ class WebSocket extends AppController implements MessageComponentInterface
 		$this->clients->detach($conn);
 		if (isset($this->user_ids[$conn->resourceId])) {
 			//Set player to Offline
-			$this->Player->removePlayer($this->user_ids[$conn->resourceId]);
+			$this->Player->setPlayerOffline($this->user_ids[$conn->resourceId]);
 			//Make player leave Lobby
 			//$this->Lobby->leave($this->user_ids[$conn->resourceId]);
 		}
@@ -149,7 +154,9 @@ class WebSocket extends AppController implements MessageComponentInterface
 			}
 		}
 	}
-	public function emitMessageByChatId($msg, $chat_id){
+
+	public function emitMessageByChatId($msg, $chat_id)
+	{
 		foreach ($this->subscriptions as $socket_user_id => $user_chat_id) {
 			if ($user_chat_id == $chat_id) {
 				$this->users[$socket_user_id]->send($msg);

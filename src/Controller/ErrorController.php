@@ -14,6 +14,7 @@
  */
 namespace App\Controller;
 
+use Cake\Core\Configure;
 use Cake\Event\Event;
 
 /**
@@ -45,15 +46,19 @@ class ErrorController extends AppController
 
     /**
      * beforeRender callback.
+	 * Errors will redirect to index page if not in debug mode
      *
      * @param \Cake\Event\Event $event Event.
-     * @return \Cake\Network\Response|null|void
+     * @return \Cake\Network\Response|\Cake\Http\Response|null
      */
     public function beforeRender(Event $event)
     {
         parent::beforeRender($event);
 
-        $this->viewBuilder()->setTemplatePath('Error');
+        if(Configure::read('debug') == true)
+        	$this->viewBuilder()->setTemplatePath('Error');
+        else
+			return $this->redirect(['controller' => 'Home', 'action' => 'index']);
     }
 
     /**

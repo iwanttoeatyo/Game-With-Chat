@@ -1,10 +1,7 @@
 <?php
 namespace App\Controller\Component;
 
-
 use Cake\Controller\Component;
-use Cake\Controller\ComponentRegistry;
-use Cake\Database\Query;
 use Cake\ORM\TableRegistry;
 use DateTime;
 
@@ -42,7 +39,7 @@ class ChatComponent extends Component
 
 		//Reverse the order of messages so newest is on the bottom
 		$messages = [];
-		foreach ($results as $message){
+		foreach ($results as $message) {
 			$messages[] = $message;
 		}
 		$messages = array_reverse($messages);
@@ -50,19 +47,21 @@ class ChatComponent extends Component
 		return $messages;
 	}
 
-	public function sendMessage($chat_id,$msg){
+	public function createMessage($chat_id, $msg)
+	{
 		$message = $this->Messages->newEntity();
-		$message->set('chat_id',$chat_id);
-		$message->set('created_date',new DateTime('now'));
-		$message->set('message',$msg->message);
-		$message->set('username',$msg->username);
-		if($this->Messages->save($message))
+		$message->set('chat_id', $chat_id);
+		$message->set('created_date', new DateTime('now'));
+		$message->set('message', $msg->message);
+		$message->set('username', $msg->username);
+		if ($this->Messages->save($message))
 			return true;
 	}
 
-	public function createChat(){
+	public function createChat()
+	{
 		$chat = $this->Chats->newEntity();
-		$chat->set('id',null);
+		$chat->set('id', null);
 		$this->Chats->save($chat);
 		return $chat->id;
 	}
