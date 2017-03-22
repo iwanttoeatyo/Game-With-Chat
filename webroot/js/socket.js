@@ -140,7 +140,7 @@ $(function () {
 		}
 	});
 
-	$('#msg_btn').click(function () {
+	$('#send-msg-btn').click(function () {
 		sendMessage();
 	});
 
