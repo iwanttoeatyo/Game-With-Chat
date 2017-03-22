@@ -10,7 +10,7 @@ echo $this->Html->script('socket.js');
 				<span style="float:left">Games/Lobbies</span>
 		  <?php if (isset($user_id)): ?>
 						<form method="post" accept-charset="utf-8" action="/lobbies/add" style="">
-							<button class="btn btn-primary pull-right" type="submit">New Lobby</button>
+							<button class="btn btn-primary" type="submit">New Lobby</button>
 						</form>
 		  <?php endif; ?>
 			</div>

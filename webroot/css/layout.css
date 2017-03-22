@@ -141,7 +141,7 @@ html,body{
 
 .message-box{
 	height: 30px;
-	background: whitesmoke;
+	background: lightgrey;
 }
 
 .form-control{
@@ -152,15 +152,15 @@ html,body{
 	margin-bottom: 0;
 }
 .list-group-item{
-
+	background-color: whitesmoke;
 	position:inherit;
 	padding: 5px 10px;
 	border-radius: 0;
 	box-sizing: border-box;
 }
-.list-group-item > .badge
-{
 
+.form-control{
+	background-color: whitesmoke;
 }
 
 ul{
@@ -198,3 +198,13 @@ ul{
 .king2{
 	 background-image: url(../img/king2.png);
  }
+.list-info{
+	font-size: 1.2em;
+	display: inline-block;
+	margin-top:50px;
+}
+
+.flex-form {
+	display: flex;
+	justify-content: center;
+}

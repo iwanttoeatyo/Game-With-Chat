@@ -45,20 +45,20 @@ Router::defaultRouteClass(DashedRoute::class);
 
 Router::scope('/', function (RouteBuilder $routes) {
     /**
-     * Here, we are connecting '/' (base path) to a controller called 'Pages',
-     * its action called 'display', and we pass a param to select the view file
-     * to use (in this case, src/Template/Pages/home.ctp)...
+     * Connecting '/' (base path) to a controller called 'Home',
+     * its action called 'index', and we pass a param to select the view file
+     * to use (in this case, src/Template/Home/index.ctp)...
      */
     $routes->connect('/', ['controller' => 'Home', 'action' => 'index']);
 
 	$routes->connect('/register', ['controller' => 'Users', 'action' => 'add']);
 	$routes->connect('/login', ['controller' => 'Users', 'action' => 'login']);
 	$routes->connect('/logout', ['controller' => 'Users', 'action' => 'logout']);
-    /**
-     * ...and connect the rest of 'Pages' controller's URLs.
-     */
-    $routes->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display']);
-
+	$routes->connect(
+		'/:controller/:id',
+		['action' => 'view'],
+		['id' => '[0-9]+','routeClass' => DashedRoute::class]
+	);
     /**
      * Connect catchall routes for all controllers.
      *
@@ -75,7 +75,7 @@ Router::scope('/', function (RouteBuilder $routes) {
      * You can remove these routes once you've connected the
      * routes you want in your application.
      */
-    $routes->fallbacks(DashedRoute::class);
+     $routes->fallbacks(DashedRoute::class);
 });
 
 /**

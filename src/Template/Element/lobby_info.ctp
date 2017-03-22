@@ -1,4 +1,4 @@
-<div style="display:block">
+<div class="list-info">
 	<div>Lobby Name: <?= $lobby->name ?></div>
 	<div>Player 1: <?php if (isset($lobby->player1))
 		  echo $lobby->player1->username; ?></div>
@@ -12,18 +12,20 @@
 	<div>
 		Lobby Status: <?= $lobby->lobby_status->lobby_status ?>
 	</div>
-</div>
 
-<?php if (isset($user_id)):?>
-<form method="post" accept-charset="utf-8" action="/lobbies/join/<?= $lobby->id ?>">
-	<button class="btn btn-primary"
-	  <?php if ($lobby->lobby_status_id != \App\Model\Entity\LobbyStatus::Open) : ?>
-				disabled
+	<div class="flex-form">
+	  <?php if (isset($user_id)): ?>
+				<form method="post" accept-charset="utf-8" action="/lobbies/join/<?= $lobby->id ?>">
+					<button class="btn btn-primary"
+			  <?php if ($lobby->lobby_status_id != \App\Model\Entity\LobbyStatus::Open) : ?>
+								disabled
+			  <?php endif; ?>
+									type="submit">Join Lobby
+					</button>
+				</form>
 	  <?php endif; ?>
-					type="submit">Join Lobby
-	</button>
-</form>
-<?php endif;?>
-<form method="get" accept-charset="utf-8" action="/lobbies/view/<?= $lobby->id ?>" >
-	<button class="btn btn-primary" type="submit">Watch Lobby</button>
-</form>
+		<form method="get" accept-charset="utf-8" action="/lobbies/view/<?= $lobby->id ?>">
+			<button class="btn btn-primary" type="submit">Watch Lobby</button>
+		</form>
+	</div>
+</div>
