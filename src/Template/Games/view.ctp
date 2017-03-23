@@ -48,12 +48,13 @@ echo $this->Html->script('checkers.js');
 			<div class="division-header">
 		  	<span id="player2-name">
 		  <?= h($lobby->player2->username) ?>
+									</span>
 			<?php if  (isset($is_player2)): ?>
 					<form class="inline-block pull-right" method="post" accept-charset="utf-8" action="/Games/forfeit">
 							<button id="forfeit-game-btn" class="btn btn-danger pull-right">Forfeit</button>
 						</form>
 			<?php endif; ?>
-				</span>
+
 
 			</div>
 			<div class="stats fill">
