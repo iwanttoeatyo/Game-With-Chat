@@ -1,4 +1,7 @@
-# Game-With-Chat
-This is going to be our online interface for a game that allows the users to chat with each other
+# Game-With-Chat # 
+### (Multiplayer online checkers using WebSockets)
+This is a CakePhp 3 Web application for online checkers. You can find it at https://urgame.me
 
-testtest
+This application uses a modified checkers game from https://github.com/codethejason/checkers
+Websocket is implemented using Ratchet PHP Websocket http://socketo.me/
+
