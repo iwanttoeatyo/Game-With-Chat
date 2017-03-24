@@ -61,7 +61,7 @@ class WebSocket extends AppController implements MessageComponentInterface
 				}
 				//Alert all people in global chat to update player list
 				if ($data->user_id) {
-					$this->emitCommandByChatId('updatePlayerList', Chat::Global_Chat_Id);
+					$this->emitCommandByChatId('updatePlayerList', Chat::GLOBAL_CHAT_ID);
 				}
 
 				break;
@@ -104,7 +104,7 @@ class WebSocket extends AppController implements MessageComponentInterface
 				//Send update lobby to everyone watching this lobby
 				$this->emitCommandByChatId('updateLobby', $targetChat);
 			case "updateLobbyList":
-				$this->emitCommandByChatId('updateLobbyList', Chat::Global_Chat_Id);
+				$this->emitCommandByChatId('updateLobbyList', Chat::GLOBAL_CHAT_ID);
 				break;
 			case "startLobby":
 				//Send start lobby command to everyone watching this lobby that just started

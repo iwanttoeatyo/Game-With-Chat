@@ -15,13 +15,13 @@
 		  <?php endif; ?>
 			</li>
 
-			<?php if (is_null($this->request->session()->read('Auth.User.username'))): ?>
+		<?php if (is_null($this->request->session()->read('Auth.User.username'))): ?>
 					<li><a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'login']) ?>">
 							<span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-			<?php else : ?>
+		<?php else : ?>
 					<li><a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'logout']) ?>">
 							<span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
-			<?php endif; ?>
+		<?php endif; ?>
 		</ul>
 	</div>
 </nav>

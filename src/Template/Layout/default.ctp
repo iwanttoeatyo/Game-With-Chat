@@ -2,10 +2,9 @@
 <html>
 <head>
 	<?= $this->Html->charset() ?>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+	<meta name="viewport" content="width=device-width, initial-scale=0.5">
 	<title>
-	  <?= $this->viewVars['title']?>
+	  <?= $this->viewVars['title'] ?>
 	</title>
 
 	<?= $this->Html->meta('icon') ?>
@@ -24,9 +23,7 @@
 </head>
 
 <body>
-
-<?= $this->element('navbar')?>
-
+<?= $this->element('navbar') ?>
 <div class="container clearfix">
 	<?= $this->fetch('content') ?>
 </div>

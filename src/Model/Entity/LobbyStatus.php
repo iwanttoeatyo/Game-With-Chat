@@ -5,6 +5,7 @@ use Cake\ORM\Entity;
 
 /**
  * LobbyStatus Entity
+ * Represents a row in Lobby_Statuses Table in Database
  *
  * @property int $id
  * @property string $lobby_status

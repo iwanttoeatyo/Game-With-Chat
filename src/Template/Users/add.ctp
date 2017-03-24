@@ -1,7 +1,6 @@
 <?php
 echo $this->Html->css('base.css');
 echo $this->Html->css('cake.css');
-
 ?>
 
 <div class="form columns content">

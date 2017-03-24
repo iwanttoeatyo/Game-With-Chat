@@ -5,6 +5,7 @@ use Cake\ORM\Entity;
 
 /**
  * Game Entity
+ * Represents a row in Games Table in Database
  *
  * @property int $id
  * @property int $lobby_id

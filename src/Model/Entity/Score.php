@@ -5,6 +5,7 @@ use Cake\ORM\Entity;
 
 /**
  * Score Entity
+ * Represents a row in Scores Table in Database
  *
  * @property int $id
  * @property int $user_id

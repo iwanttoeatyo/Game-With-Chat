@@ -3,13 +3,11 @@ echo $this->Html->script('socket.js');
 ?>
 <div class="col-xs-12 top-container no-padding">
 	<div class="col-xs-4 fill placeholder no-padding">
-
-
 		<div class="top-side-division">
 			<div class="division-header">
 				<span style="float:left">Games/Lobbies</span>
 		  <?php if (isset($user_id)): ?>
-						<form method="post" accept-charset="utf-8" action="/lobbies/add" style="">
+						<form method="post" accept-charset="utf-8" action="/lobbies/add">
 							<button class="btn btn-primary" type="submit">New Lobby</button>
 						</form>
 		  <?php endif; ?>
@@ -41,10 +39,10 @@ echo $this->Html->script('socket.js');
 			</div>
 			<p>Create or Join a lobby to play checkers with another human.</p>
 			<p>Click on the Lobbies or Players in the lists for detailed information.</p>
-			<?php if(empty($user_id)):?>
-			<p>You must login to Join or Create lobbies.</p>
-			<?php endif;?>
-				<div class="info-container">
+		<?php if (empty($user_id)): ?>
+					<p>You must login to Join or Create lobbies.</p>
+		<?php endif; ?>
+			<div class="info-container">
 			</div>
 		</div>
 	</div>

@@ -5,6 +5,7 @@ use Cake\ORM\Entity;
 
 /**
  * Message Entity
+ * Represents a row in Messages Table in Database
  *
  * @property int $id
  * @property int $chat_id

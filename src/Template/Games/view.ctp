@@ -21,14 +21,12 @@ echo $this->Html->script('checkers.js');
 
 <div class="col-xs-12 top-container no-padding">
 	<div class="col-xs-4 fill placeholder no-padding">
-
-
 		<div class="top-side-division">
 			<div class="division-header">
 				<span id="player1-name">
 			<?= h($lobby->player1->username) ?>
 				</span>
-		  <?php if  (isset($is_player1)): ?>
+		  <?php if (isset($is_player1)): ?>
 						<form class="inline-block pull-right" method="post" accept-charset="utf-8" action="/Games/forfeit">
 							<button id="forfeit-game-btn" class="btn btn-danger pull-right">Forfeit</button>
 						</form>
@@ -42,20 +40,17 @@ echo $this->Html->script('checkers.js');
 				</div>
 				<div class="turn" id="player1Turn"></div>
 			</div>
-
 		</div>
 		<div class="bottom-side-division">
 			<div class="division-header">
 		  	<span id="player2-name">
 		  <?= h($lobby->player2->username) ?>
 									</span>
-			<?php if  (isset($is_player2)): ?>
-					<form class="inline-block pull-right" method="post" accept-charset="utf-8" action="/Games/forfeit">
+		  <?php if (isset($is_player2)): ?>
+						<form class="inline-block pull-right" method="post" accept-charset="utf-8" action="/Games/forfeit">
 							<button id="forfeit-game-btn" class="btn btn-danger pull-right">Forfeit</button>
 						</form>
-			<?php endif; ?>
-
-
+		  <?php endif; ?>
 			</div>
 			<div class="stats fill">
 				<div class="wrapper">

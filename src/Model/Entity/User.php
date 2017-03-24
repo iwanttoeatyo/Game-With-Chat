@@ -6,6 +6,7 @@ use Cake\ORM\Entity;
 
 /**
  * User Entity
+ * Represents a row in User Table in Database
  *
  * @property int $id
  * @property string $username
@@ -22,7 +23,13 @@ use Cake\ORM\Entity;
 class User extends Entity
 {
 
-
+	/**
+	 * Stores the password using the default Hasher
+	 *
+	 * @param string $password
+	 * @return bool|string
+	 *
+	 */
 	protected function _setPassword($password)
 	{
 		if (strlen($password) > 0) {

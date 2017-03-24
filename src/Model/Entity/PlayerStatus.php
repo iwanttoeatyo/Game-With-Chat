@@ -5,6 +5,7 @@ use Cake\ORM\Entity;
 
 /**
  * PlayerStatus Entity
+ * Represents a row in Player_Statuses Table in Database
  *
  * @property int $id
  * @property string $player_status

@@ -9,8 +9,7 @@ echo $this->Html->css('checkers.css');
 
 <div class="col-xs-12 top-container no-padding">
 	<div class="col-xs-4 fill placeholder no-padding">
-
-
+<!--		Player 1 Block-->
 		<div class="top-side-division">
 			<div class="division-header">
 				<span id="player1-name">
@@ -28,6 +27,7 @@ echo $this->Html->css('checkers.css');
 			</div>
 
 		</div>
+<!--		Player 2 Block-->
 		<div class="bottom-side-division">
 			<div class="division-header">
 		  	<span id="player2-name">
@@ -46,12 +46,10 @@ echo $this->Html->css('checkers.css');
 				<div class="turn" id="player2Turn"></div>
 			</div>
 		</div>
-
 	</div>
 
 	<div class="col-xs-8 fill">
 		<div class="home-container">
-
 			<div class="welcome-header">
 				<h1><?= h($lobby->name) ?></h1>
 			</div>
@@ -63,8 +61,6 @@ echo $this->Html->css('checkers.css');
 		  <?php else: ?>
 						You are just spectating this Lobby
 		  <?php endif; ?>
-
-
 		  <?php if (isset($is_player1) || isset($is_player2)): ?>
 			<form method="post" accept-charset="utf-8" action="/lobbies/start/<?= $lobby->id ?>">
 				<button id="start-lobby-btn" class="btn btn-primary"
@@ -76,7 +72,7 @@ echo $this->Html->css('checkers.css');
 			</form>
 		<?php endif; ?>
 
-		<?php if  (isset($is_player1) || isset($is_player2)): ?>
+		<?php if (isset($is_player1) || isset($is_player2)): ?>
 					<form method="post" accept-charset="utf-8" action="/lobbies/leave/<?= $lobby->id ?>">
 						<button id="leave-lobby-btn" class="btn btn-primary" type="submit">Leave Lobby
 						</button>

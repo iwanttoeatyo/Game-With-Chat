@@ -50,7 +50,6 @@ Router::scope('/', function (RouteBuilder $routes) {
      * to use (in this case, src/Template/Home/index.ctp)...
      */
     $routes->connect('/', ['controller' => 'Home', 'action' => 'index']);
-
 	$routes->connect('/register', ['controller' => 'Users', 'action' => 'add']);
 	$routes->connect('/login', ['controller' => 'Users', 'action' => 'login']);
 	$routes->connect('/logout', ['controller' => 'Users', 'action' => 'logout']);
@@ -59,21 +58,9 @@ Router::scope('/', function (RouteBuilder $routes) {
 		['action' => 'view'],
 		['id' => '[0-9]+','routeClass' => DashedRoute::class]
 	);
+
     /**
      * Connect catchall routes for all controllers.
-     *
-     * Using the argument `DashedRoute`, the `fallbacks` method is a shortcut for
-     *    `$routes->connect('/:controller', ['action' => 'index'], ['routeClass' => 'DashedRoute']);`
-     *    `$routes->connect('/:controller/:action/*', [], ['routeClass' => 'DashedRoute']);`
-     *
-     * Any route class can be used with this method, such as:
-     * - DashedRoute
-     * - InflectedRoute
-     * - Route
-     * - Or your own route class
-     *
-     * You can remove these routes once you've connected the
-     * routes you want in your application.
      */
      $routes->fallbacks(DashedRoute::class);
 });

@@ -5,6 +5,7 @@ use Cake\ORM\Entity;
 
 /**
  * Chat Entity
+ * Represents a row in Chats Table in Database
  *
  * @property int $id
  *
@@ -13,7 +14,7 @@ use Cake\ORM\Entity;
  */
 class Chat extends Entity
 {
-	Const Global_Chat_Id = 1;
+	Const GLOBAL_CHAT_ID = 1;
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
