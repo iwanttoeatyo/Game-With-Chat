@@ -81,7 +81,16 @@ class HomeController extends AppController
 		if ($this->request->is('post')) {
 			$lobby = $this->Lobby->getLobby($id);
 			$this->viewBuilder()->setTemplatePath('Element');
-			$this->set(compact('lobby', 'user_id'));
+
+			//Check if the user is already joined in a another lobby
+			$user_in_other_lobby = false;
+			if(isset($user_id)){
+				$other_lobby = $this->Lobby->findLobbyByUserId($user_id);
+				if(isset($other_lobby) && $other_lobby->get('id') != $lobby->get('id'))
+					$user_in_other_lobby = true;
+			}
+
+			$this->set(compact('lobby', 'user_id','user_in_other_lobby'));
 			$this->render('lobby_info', 'ajax');
 		}
 	}
