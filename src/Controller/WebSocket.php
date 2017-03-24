@@ -37,6 +37,21 @@ class WebSocket extends AppController implements MessageComponentInterface
 		$this->clients->attach($conn);
 		//Store
 		$this->users[$conn->resourceId] = $conn;
+		
+		//Reconnect to database if connection lost
+		/*
+		if (!mysql_ping()) {
+    			$this->ModelName->getDatasource()->reconnect(); 
+		}
+		
+		//OR
+		
+		use Cake\Datasource\ConnectionManager;
+		$connection = ConnectionManager::get('default');
+		if(!$connection->isConnected()) {
+   			$connection->connect();
+		}
+		*/
 
 	}
 
