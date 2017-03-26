@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Model\Entity\Chat;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
+use Cake\Datasource\ConnectionManager;
 
 /**
  * WebSocket.php
@@ -37,21 +38,13 @@ class WebSocket extends AppController implements MessageComponentInterface
 		$this->clients->attach($conn);
 		//Store
 		$this->users[$conn->resourceId] = $conn;
-		
+
 		//Reconnect to database if connection lost
-		/*
-		if (!mysql_ping()) {
-    			$this->ModelName->getDatasource()->reconnect(); 
+		$db_conn = ConnectionManager::get('default');
+		if(!$db_conn->isConnected()){
+			$db_conn->disconnect();
+			$db_conn->connect();
 		}
-		
-		//OR
-		
-		use Cake\Datasource\ConnectionManager;
-		$connection = ConnectionManager::get('default');
-		if(!$connection->isConnected()) {
-   			$connection->connect();
-		}
-		*/
 
 	}
 
@@ -88,8 +81,7 @@ class WebSocket extends AppController implements MessageComponentInterface
 
 					//Check if message is not unicode
 					//Respond to user sending message
-					if (strlen($msg) != strlen(utf8_decode($msg)))
-					{
+					if (strlen($msg) != strlen(utf8_decode($msg))) {
 						$this->users[$conn->resourceId]->send(json_encode(array(
 							'command' => 'message',
 							'msg' => [
