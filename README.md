@@ -17,6 +17,7 @@ Install Composer for php http://getcomposer.org/
 Setup a MySQL database called app
 run the sql in [config/schema/urgame.sql](config/schema/urgame.sql) in the new app database
 
+Checkout this repository and run composer in the main directory.
 Update composer dependencies. Composer should download all necessary dependencies
 run `composer self-update`  
 run `composer update`  
