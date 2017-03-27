@@ -1,8 +1,15 @@
-# Game-With-Chat # 
-### (Multiplayer online checkers using WebSockets and CakePHP 3)
-This is a CakePhp 3 Web application for online checkers. You can find it at https://urgame.me  
+# Game-With-Chat #
+## You can find it at  https://urgame.me/  
+### (Multiplayer online checkers using WebSockets and CakePHP 3)  
+This project was created for CS372 at the University of Regina.  
 This application uses a modified checkers game from https://github.com/codethejason/checkers  
-Websocket is implemented using Ratchet PHP Websocket http://socketo.me/  
+Websocket is implemented using Ratchet PHP Websocket http://socketo.me/
+
+## Current Server Specs (Hosted by Digital Ocean)
+Ubuntu 16.04.1  
+Nginx 1.10.0  
+MySQL 5.7.17  
+PHP 7.0.13  
 
 ## Getting it to run
 Full CakePHP installation tutorial at https://book.cakephp.org/3.0/en/installation.html
