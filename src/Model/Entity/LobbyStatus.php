@@ -14,9 +14,21 @@ use Cake\ORM\Entity;
  */
 class LobbyStatus extends Entity
 {
+	/**
+	 * A lobby is open if it has 1 player
+	 */
 	const Open = 0;
-	const Full = 1;
+	/**
+	 * A lobby is full if it has a player1 and player2
+	 */
+	const Full = 1; //
+	/**
+	 * A lobby is started if the game is started after being full
+	 */
 	const Started = 2;
+	/**
+	 * A lobby is closed after player1 leaves or the game ends by forfeit or win
+	 */
 	const Closed = 3;
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

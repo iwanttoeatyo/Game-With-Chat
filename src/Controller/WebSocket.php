@@ -8,11 +8,10 @@ use Ratchet\MessageComponentInterface;
 use Cake\Datasource\ConnectionManager;
 
 /**
- * WebSocket.php
- * WebSocket connection interface for WebSocket run by shell on port 2020
- *
- * Send any incoming messages to all clients grouped by a chat_id
- * Chat messages are saved into the database
+ * WebSocket connection interface for the WebSocket server.
+ * 
+ * Send any incoming messages to all clients grouped by a chat_id<br>
+ * Chat messages are saved into the database  
  *
  * @property \App\Controller\Component\PlayerComponent $Player
  * @property \App\Controller\Component\ChatComponent $Chat
@@ -28,50 +27,43 @@ class WebSocket extends AppController implements MessageComponentInterface
 	protected $clients;
 
 	/**
-	 * Contains reference to connectionInterface using connectionInterface's resourceId
-	 * array[ConnectionInterface->resourceId] =  ConnectionInterface
+	 * Contains reference to connectionInterface using connectionInterface's resourceId.  
+	 * array[ConnectionInterface->resourceId] =  ConnectionInterface  
 	 *
 	 * Example:
-	 * `$users[$conn->resourceId] = $conn;`
+	 * `$users[$conn->resourceId] = $conn;`  
 	 *
-	 * @var array[int]\Ratchet\ConnectionInterface
+	 * @var array[int]\Ratchet\ConnectionInterface  
 	 */
 	private $users;
 
 	/**
-	 * Contains reference to User's user_id using connectionInterface's resourceId
-	 * array[ConnectionInterface->resourceId] =  user_id
+	 * Contains reference to User's user_id using connectionInterface's resourceId.  
+	 * array[ConnectionInterface->resourceId] =  user_id  
 	 *
-	 * Example:
-	 * `$user_ids[$conn->resourceId] = $some_user_id;`
+	 * Example:  
+	 * `$user_ids[$conn->resourceId] = $some_user_id;`  
 	 *
 	 * @var array[int]int
 	 */
 	private $user_ids;
 
 	/**
-	 * Contains reference to User's subscribed chat_id using connectionInterface's resourceId
-	 * array[ConnectionInterface->resourceId] = chat_id
+	 * Contains reference to User's subscribed chat_id using connectionInterface's resourceId. 
+	 * array[ConnectionInterface->resourceId] = chat_id  
 	 *
-	 * Example:
-	 * `$subscriptions[$conn->resourceId] = $some_chat_id;`
+	 * Example:  
+	 * `$subscriptions[$conn->resourceId] = $some_chat_id ;`  
 	 *
 	 * @var array[int]int
 	 */
 	private $subscriptions;
 
 	/**
-	 * Other components utilized by WebSocket
+	 * Initialization hook method.  
 	 *
-	 * @var array
-	 */
-	public $components = ['Player', 'Chat'];
-
-
-	/**
-	 * Initialization hook method.
-	 * Loads Player and Chat components
-	 * Initializes variables
+	 * Loads Player and Chat components.
+	 * Initializes variables.
 	 *
 	 * @return void
 	 */
@@ -86,8 +78,8 @@ class WebSocket extends AppController implements MessageComponentInterface
 	}
 
 	/**
-	 * When a client connects to the WebSocket server this function is run
-	 * Attaches the clients connection interface into object storage
+	 * When a client connects to the WebSocket server.
+	 * Attaches the clients connection interface into object storage  
 	 *
 	 * @param ConnectionInterface $conn
 	 */
@@ -110,22 +102,22 @@ class WebSocket extends AppController implements MessageComponentInterface
 	}
 
 	/**
-	 * When a client sends a message to the WebSocket server it is received here
+	 * When a client sends a message to the WebSocket server.
 	 *
-	 * Example msg for chat message
-	 * `{"command":"message","msg":{"username":"a","message":"yes"}}`
+	 * Example msg for chat message<br>
+	 * `{"command":"message","msg":{"username":"a","message":"yes"}}`  
 	 *
-	 *	Example msg for join chat
-	 * `{"command":"joinChat","player_status":1,"chat_id":"1","user_id":"1"}`
+	 *	Example msg for join chat<br>
+	 * `{"command":"joinChat","player_status":1,"chat_id":"1","user_id":"1"}`  
 	 *
-	 * Examples of msg for a simple command
-	 * `{"command":"closeLobby"}`
-	 * `{"command":"updateLobby"}`
-	 * `{"command":"updateLobbyList"}`
-	 * `{"command":"startLobby"}`
+	 * Examples of msg for a simple command<br> 
+	 * `{"command":"closeLobby"}`<br> 
+	 * `{"command":"updateLobby"}`<br>
+	 * `{"command":"updateLobbyList"}`<br>
+	 * `{"command":"startLobby"}`<br>
 	 *
-	 * Example msg for gameOver
-	 * `{"command":"gameOver","winner":1,"winner_name":"c"}`
+	 * Example msg for gameOver<br>
+	 * `{"command":"gameOver","winner":1,"winner_name":"c"}`  
 	 *
 	 * @param ConnectionInterface $conn
 	 * @param string $msg The json message received from the client
@@ -222,7 +214,7 @@ class WebSocket extends AppController implements MessageComponentInterface
 	}
 
 	/**
-	 * When a client disconnect from the websocket server
+	 * When a client disconnect from the WebSocket server.
 	 *
 	 * @param ConnectionInterface $conn
 	 */
@@ -255,7 +247,7 @@ class WebSocket extends AppController implements MessageComponentInterface
 
 
 	/**
-	 * Send single command to all clients on same chat_id
+	 * Send single command to all clients on same chat_id.
 	 *
 	 * @param string $command
 	 * @param int $chat_id
@@ -270,7 +262,7 @@ class WebSocket extends AppController implements MessageComponentInterface
 	}
 
 	/**
-	 * Send full json msg to all clients on same chat_id
+	 * Send full json msg to all clients on same chat_id.
 	 *
 	 * @param string $msg
 	 * @param int $chat_id

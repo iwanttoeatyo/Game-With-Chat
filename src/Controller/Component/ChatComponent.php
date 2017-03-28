@@ -6,7 +6,8 @@ use Cake\ORM\TableRegistry;
 use DateTime;
 
 /**
- * Chat component
+ * Business logic related to Chat and Messages
+ * Creates new Chats and inserts and select Messages
  *
  * @property \App\Model\Table\ChatsTable $Chats
  * @property \App\Model\Table\MessagesTable $Messages
@@ -14,7 +15,21 @@ use DateTime;
  */
 class ChatComponent extends Component
 {
+	/**
+	 * Default configuration.
+	 *
+	 * @var array
+	 */
+	protected $_defaultConfig = [];
 
+	/**
+	 * Initialization hook method.
+	 *
+	 * Loads Chats and Messages database tables
+	 *
+	 * @param array $config
+	 * @return void
+	 */
 	public function initialize(array $config)
 	{
 		parent::initialize($config);
@@ -23,12 +38,13 @@ class ChatComponent extends Component
 	}
 
 	/**
-	 * Default configuration.
-	 *
-	 * @var array
+	 * Gets 10 most recent messages and reverses them
+	 * so the most recent message is at the end of the array.
+	 * Useful for displaying chat with recent message at bottom.
+	 * 
+	 * @param int $chat_id
+	 * @return array
 	 */
-	protected $_defaultConfig = [];
-
 	public function getMessages($chat_id)
 	{
 		$results = $this->Messages->find()
@@ -43,10 +59,19 @@ class ChatComponent extends Component
 			$messages[] = $message;
 		}
 		$messages = array_reverse($messages);
-
 		return $messages;
 	}
 
+	/**
+	 * Inserts msg object into database.
+	 * Example msg for chat message<br>
+	 * ```(	[username] => a
+	 *	   	[message] => yes )```
+	 * 
+	 * @param int $chat_id
+	 * @param \stdClass $msg
+	 * @return bool
+	 */
 	public function createMessage($chat_id, $msg)
 	{
 		$message = $this->Messages->newEntity();
@@ -58,6 +83,12 @@ class ChatComponent extends Component
 			return true;
 	}
 
+	/**
+	 * Inserts an empty Chat into database.
+	 * Id is auto generated
+	 * 
+	 * @return int
+	 */
 	public function createChat()
 	{
 		$chat = $this->Chats->newEntity();

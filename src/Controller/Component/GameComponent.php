@@ -6,8 +6,9 @@ use Cake\Controller\Component;
 use Cake\ORM\TableRegistry;
 
 /**
- * Game component
- *
+ * Business Logic relating to Games.
+ * CRUD operations and logic pertaining to game winning and forfeiting
+ * 
  * @property \App\Model\Table\GamesTable $Games
  * @property \App\Model\Table\ScoresTable $Scores
  * @property \App\Controller\Component\PlayerComponent $Player
@@ -17,8 +18,21 @@ use Cake\ORM\TableRegistry;
 class GameComponent extends Component
 {
 
+	/**
+	 * Other components used in this component
+	 * 
+	 * @var array
+	 */
 	public $components = ['Chat', 'Player', 'Lobby'];
-
+	
+	/**
+	 * Initialization hook method.
+	 *
+	 * Loads Games and Scores database tables
+	 *
+	 * @param array $config
+	 * @return void
+	 */
 	public function initialize(array $config)
 	{
 		parent::initialize($config);
@@ -26,6 +40,13 @@ class GameComponent extends Component
 		$this->Scores = TableRegistry::get('Scores');
 	}
 
+	/**
+	 * Returns a game object with lobby and GameStatus
+	 * objects attached
+	 * 
+	 * @param $game_id
+	 * @return \App\Model\Entity\Game
+	 */
 	public function getGame($game_id)
 	{
 		$game = $this->Games->get($game_id, [
@@ -34,12 +55,25 @@ class GameComponent extends Component
 		return $game;
 	}
 
+	/** 
+	 * Returns the JSON game state
+	 * 
+	 * @param $game_id
+	 * @return string
+	 */
 	public function getGameState($game_id)
 	{
 		$game = $this->getGame($game_id);
 		return $game->get('game_state');
 	}
 
+	/**
+	 * Returns winner 1 or 2 and winner name
+	 * as array
+	 * 
+	 * @param $game_id
+	 * @return array
+	 */
 	public function getWinnerInfo($game_id)
 	{
 		$winnerInfo = [];
@@ -56,6 +90,12 @@ class GameComponent extends Component
 		return $winnerInfo;
 	}
 
+	/**
+	 * Returns game if it exists given associated lobby_id
+	 * 
+	 * @param $lobby_id
+	 * @return \App\Model\Entity\Game 
+	 */
 	public function findGameByLobbyId($lobby_id)
 	{
 		$game = $this->Games->find()
@@ -66,6 +106,12 @@ class GameComponent extends Component
 		return $game;
 	}
 
+	/**
+	 * Creates a new Game and attaches it to a lobby
+	 * 
+	 * @param $lobby_id
+	 * @return int game_id
+	 */
 	public function createGameForLobby($lobby_id)
 	{
 		$game = $this->Games->newEntity();
@@ -76,6 +122,13 @@ class GameComponent extends Component
 		return $game->get('id');
 	}
 
+	/**
+	 * Updates Winner's win_count and Loser's loss_count
+	 * in database.
+	 * 
+	 * @param $winner_id
+	 * @param $loser_id
+	 */
 	public function updateScores($winner_id, $loser_id)
 	{
 		$winner = $this->Player->getPlayer($winner_id);
@@ -88,6 +141,14 @@ class GameComponent extends Component
 		$this->Scores->save($loser_score);
 	}
 
+	/**
+	 * Finds the game that a user is in and updates its game state
+	 * If a player has captures 12 pieces then end game and return true
+	 * 
+	 * @param $user_id
+	 * @param $json_game_state
+	 * @return bool|int
+	 */
 	public function updateGameStateByUserId($user_id, $json_game_state)
 	{
 		$lobby = $this->Lobby->findLobbyByUserId($user_id);
@@ -104,12 +165,17 @@ class GameComponent extends Component
 			if ($winner == 2) {
 				$this->setWinnerAndEndGame($game->get('id'), 2);
 			}
-
-			return true;
 		}
 		return $winner;
 	}
 
+	/**
+	 * Forfeit player from game if game is still active
+	 * 
+	 * @param $game_id
+	 * @param $user_id
+	 * @return bool
+	 */
 	public function tryForfeitGame($game_id, $user_id)
 	{
 		if ($this->isGameActive($game_id)) {
@@ -128,6 +194,13 @@ class GameComponent extends Component
 		return false;
 	}
 
+	/**
+	 * Set game's winner, update winner's and loser'sScores,
+	 * close lobby
+	 * 
+	 * @param int $game_id
+	 * @param int $winner
+	 */
 	public function setWinnerAndEndGame($game_id, $winner)
 	{
 		$game = $this->getGame($game_id);
@@ -152,6 +225,12 @@ class GameComponent extends Component
 		$this->updateScores($winner_id, $loser_id);
 	}
 
+	/**
+	 * Return player number if player has captured 12 pieces
+	 * 
+	 * @param string $json_game_state
+	 * @return int
+	 */
 	public function checkForWinner($json_game_state)
 	{
 		$game_state = json_decode($json_game_state);
@@ -166,6 +245,13 @@ class GameComponent extends Component
 		return 0;
 	}
 
+	/**
+	 * Return true if user is player 1 or player 2 in game
+	 * 
+	 * @param int $game_id
+	 * @param int $user_id
+	 * @return bool
+	 */
 	public function userIsPlayerInGame($game_id, $user_id)
 	{
 		$game = $this->getGame($game_id);
@@ -174,12 +260,26 @@ class GameComponent extends Component
 			($lobby->get('player2_user_id') == $user_id));
 	}
 
+	/**	
+	 * Return true if GameStatus is Active
+	 * @see \App\Model\Entity\GameStatus 
+	 * 
+	 * @param $game_id
+	 * @return bool
+	 */
 	public function isGameActive($game_id)
 	{
 		$game = $this->getGame($game_id);
 		return ($game->get('game_status_id') == GameStatus::Active);
 	}
 
+	/**
+	 * Return true if GameStatus is Ended
+	 * @see \App\Model\Entity\GameStatus
+	 * 
+	 * @param $game_id
+	 * @return bool
+	 */
 	public function isGameEnded($game_id)
 	{
 		$game = $this->getGame($game_id);

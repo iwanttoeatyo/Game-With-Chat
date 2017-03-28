@@ -10,7 +10,7 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property int $lobby_id
  * @property int $game_status_id
- * @property int $game_state
+ * @property string $game_state
  * @property int $winner
  * @property \Cake\I18n\Time $modified_date
  *

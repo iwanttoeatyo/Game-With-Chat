@@ -1,17 +1,28 @@
 <?php
+
 namespace App\Controller;
 
+use App\Model\Entity\Chat;
+use Cake\Core\Configure;
+
 /**
- * Home Controller
- *
+ * Controller to display homepage.
+ * Contains ajax calls to request lobby and player lists. As well
+ * lobby and player info.
+ * 
  * @property \App\Controller\Component\LobbyComponent $Lobby
  * @property \App\Controller\Component\ChatComponent $Chat
  * @property \App\Controller\Component\PlayerComponent $Player
  */
+
 class HomeController extends AppController
 {
-	var $uses = false;
-
+	/**
+	 * Initialization hook method.
+	 *
+	 * Loads Player, Chat and Lobby components.
+	 * @return void
+	 */
 	public function initialize()
 	{
 		parent::initialize();
@@ -21,36 +32,44 @@ class HomeController extends AppController
 	}
 
 	/**
-	 * Index method
-	 *
+	 * Display homepage, with global chat and players/lobby lists.
+	 * 
+	 * Displays Template/Home/index.ctp
+	 * Renders Template/Element/chat.ctp
 	 * @return \Cake\Network\Response|null
 	 */
 	public function index()
 	{
-
-		$chat_id = 1; //global chat id
+		$chat_id = Chat::GLOBAL_CHAT_ID;
 
 		//get current user's username
 		$username = $this->Auth->user('username');
 		$user_id = $this->Auth->user('id');
 
-		//get recent messages
+		//get 10 recent messages for global chat
 		$messages = $this->Chat->getMessages($chat_id);
 
+		//get list of online players
 		$players = $this->Player->getPlayerList();
 
+		//get list of active lobbies
 		$lobbies = $this->Lobby->getLobbyList();
-		//get lobby list
 
-
-		$title = 'URGame';
+		//set page title
+		$title = Configure::read('App.Name');
+		//make vars accessible in template
 		$this->set(compact('title'));
 		$this->set(compact('messages', 'lobbies', 'chat_id',
 			'username', 'user_id', 'players'));
-		$this->render('index');
 	}
 
 
+	/**
+	 * Ajax Get Request for Player List.
+	 * 
+	 * Renders Template/Element/player_list.ctp
+	 * @return \Cake\Http\Response
+	 */
 	public function getPlayerList()
 	{
 		$this->autoRender = false;
@@ -62,6 +81,12 @@ class HomeController extends AppController
 		}
 	}
 
+	/**
+	 *  Ajax Get Request for Lobby/Game List.
+	 * 
+	 * Renders Template/Element/lobby_list.ctp
+	 * @return \Cake\Http\Response
+	 */
 	public function getLobbyList()
 	{
 		$this->autoRender = false;
@@ -73,6 +98,12 @@ class HomeController extends AppController
 		}
 	}
 
+	/**
+	 * Ajax Get Request for Lobby/Game Info.
+	 * 
+	 * Renders Template/Element/lobby_info.ctp
+	 * @return \Cake\Http\Response
+	 */
 	public function getLobbyInfo()
 	{
 		$user_id = $this->Auth->user('id');
@@ -95,6 +126,12 @@ class HomeController extends AppController
 		}
 	}
 
+	/**
+	 * Ajax Get Request for Player Info.
+	 * 
+	 * Renders Template/Element/player_info.ctp
+	 * @return \Cake\Http\Response
+	 */
 	public function getPlayerInfo()
 	{
 		$id = $this->request->getData('id');

@@ -14,9 +14,21 @@ use Cake\ORM\Entity;
  */
 class PlayerStatus extends Entity
 {
+	/**
+	 * 	A player is set offline when they disconnect from the websocket
+	 */
 	const Offline = 0;
+	/**
+	 *	A player is in global when they connect to the websocket on the home page
+	 */
 	const Global = 1;
+	/**
+	 * A player is in global when they connect to the websocket in a lobby
+	 */
 	const Lobby = 2;
+	/**
+	 * A player is in global when they connect to the websocket in a game
+	 */
 	const Game = 3;
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

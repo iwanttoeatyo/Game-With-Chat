@@ -17,9 +17,22 @@ use Cake\ORM\TableRegistry;
  */
 class LobbyComponent extends Component
 {
-	// The other component your component uses
+	/**
+	 * Other components used in this component
+	 *
+	 * @var array
+	 */
 	public $components = ['Chat', 'Player', 'Game'];
-
+	
+	
+	/**
+	 * Initialization hook method.
+	 *
+	 * Loads Lobbies and Users database tables
+	 *
+	 * @param array $config
+	 * @return void
+	 */
 	public function initialize(array $config)
 	{
 		parent::initialize($config);
@@ -27,6 +40,13 @@ class LobbyComponent extends Component
 		$this->Users = TableRegistry::get('Users');
 	}
 
+	/**
+	 * Returns Lobby object with Player1 User and Player2 User and 
+	 * LobbyStatus attached
+	 * 
+	 * @param $lobby_id
+	 * @return Lobby
+	 */
 	public function getLobby($lobby_id)
 	{
 		$lobby = $this->Lobbies->get($lobby_id, [
@@ -35,6 +55,9 @@ class LobbyComponent extends Component
 		return $lobby;
 	}
 
+	/**
+	 * @return \Cake\Datasource\ResultSetInterface
+	 */
 	public function getLobbyList()
 	{
 		$lobbies = $this->Lobbies->find()
@@ -44,7 +67,13 @@ class LobbyComponent extends Component
 		return $lobbies;
 	}
 
-	//Returns lobby that is not closed
+	/**
+	 * Returns a user's lobby where lobby status is not closed
+	 * @see \App\Model\Entity\LobbyStatus
+	 * 
+	 * @param $user_id
+	 * @return \App\Model\Entity\Lobby
+	 */
 	public function findLobbyByUserId($user_id)
 	{
 		$lobby = $this->Lobbies->find()
@@ -57,6 +86,12 @@ class LobbyComponent extends Component
 	}
 
 
+	/**
+	 * Create new lobby and put user in it as player 1
+	 * 
+	 * @param $user_id
+	 * @return int
+	 */
 	public function createLobby($user_id)
 	{
 		$lobby = $this->Lobbies->newEntity();
@@ -71,6 +106,12 @@ class LobbyComponent extends Component
 		return $lobby->get('id');
 	}
 
+	/**
+	 * Starts a checker's game in a full lobby
+	 * 
+	 * @param $lobby_id
+	 * @return Lobby|bool
+	 */
 	public function startLobby($lobby_id)
 	{
 		$lobby = $this->getLobby($lobby_id);
@@ -86,6 +127,13 @@ class LobbyComponent extends Component
 		return false;
 	}
 
+	/**
+	 * Sets a lobby's status to closed
+	 * @see \App\Model\Entity\LobbyStatus
+	 * 
+	 * @param $lobby_id
+	 * @return Lobby|bool
+	 */
 	public function closeLobby($lobby_id)
 	{
 		$lobby = $this->getLobby($lobby_id);
@@ -93,6 +141,11 @@ class LobbyComponent extends Component
 		return $this->Lobbies->save($lobby);
 	}
 
+	/**
+	 * Removes user from lobby. Closes lobby if player1 is removed.
+	 * 
+	 * @param $user_id
+	 */
 	public function leaveLobby($user_id)
 	{
 		$lobby = $this->findLobbyByUserId($user_id);
@@ -111,6 +164,14 @@ class LobbyComponent extends Component
 		}
 	}
 
+	/**
+	 * Tries to add user to lobby as player2
+	 * Will return false if lobby is full or locked
+	 * 
+	 * @param $user_id
+	 * @param $lobby_id
+	 * @return Lobby|bool
+	 */
 	public function tryToAddPlayer2ToLobby($user_id, $lobby_id)
 	{
 		//if user already joined a lobby
@@ -127,6 +188,16 @@ class LobbyComponent extends Component
 		return false;
 	}
 
+	/**
+	 * Sets user as player2 in lobby.
+	 * 
+	 * Unlocks lobby. Sets lobby status to full.
+	 * @see \App\Model\Entity\LobbyStatus
+	 * 
+	 * @param $user_id
+	 * @param $lobby_id
+	 * @return Lobby|bool
+	 */
 	private function addPlayer2ToLobby($user_id, $lobby_id)
 	{
 		$lobby = $this->getLobby($lobby_id);
@@ -137,6 +208,12 @@ class LobbyComponent extends Component
 		return $this->Lobbies->save($lobby);
 	}
 
+	/**
+	 * Sets a lobby's lock to locked
+	 * 
+	 * @param $lobby_id
+	 * @return Lobby|bool
+	 */
 	public function lockLobby($lobby_id)
 	{
 		$lobby = $this->getLobby($lobby_id);
@@ -144,12 +221,25 @@ class LobbyComponent extends Component
 		return $this->Lobbies->save($lobby);
 	}
 
+	/**
+	 * Returns true if lobby status is open
+	 * @see \App\Model\Entity\LobbyStatus
+	 * 
+	 * @param $lobby_id
+	 * @return bool
+	 */
 	public function isLobbyOpen($lobby_id)
 	{
 		$lobby = $this->getLobby($lobby_id);
 		return ($lobby->get('lobby_status_id') == LobbyStatus::Open);
 	}
 
+	/**
+	 * Returns true if lobby is not locked
+	 * 
+	 * @param $lobby_id
+	 * @return bool
+	 */
 	public function isLobbyUnlocked($lobby_id)
 	{
 		$lobby = $this->getLobby($lobby_id);

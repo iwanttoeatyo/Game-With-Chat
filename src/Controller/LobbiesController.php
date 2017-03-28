@@ -6,9 +6,10 @@ use Cake\Core\Configure;
 use Cake\Network\Exception\NotFoundException;
 
 /**
- * Lobbies Controller
- *
- * @package App\Controller
+ * Controller to display a lobby.
+ * 
+ * Contains post request to join, add(create), leave and start a lobby.
+ * Contains ajax requests to get updated information about players in a lobby.
  *
  * @property \App\Model\Table\LobbiesTable $Lobbies
  * @property \App\Model\Table\ChatsTable $Chats
@@ -36,6 +37,8 @@ class LobbiesController extends AppController
 	/**
 	 * Displays a lobby view
 	 *
+	 * Displays Template/Lobbies/view.ctp
+	 * Renders Template/Element/chat.ctp
 	 * @param null $id
 	 * @return \Cake\Http\Response
 	 * @throws \Cake\Network\Exception\NotFoundException When the lobby could not be found by id
@@ -67,19 +70,19 @@ class LobbiesController extends AppController
 				$is_player2 = true;
 			}
 		}
-		//get recent messages
+		//get 10 most recent messages
 		$messages = $this->Chat->getMessages($lobby->get('chat_id'));
 
 		//set page title
 		$title = $lobby->name . ' | ' . Configure::read('App.Name');;
 
-		//make these objects accessible in the template
+		//make vars accessible in template
 		$this->set(compact('title', 'messages', 'lobby',
 			'username', 'user_id', 'is_player1', 'is_player2'));
 	}
 
 	/**
-	 * @param int|void $id
+	 * @param int|void $id Lobby id
 	 * @return \Cake\Http\Response|null
 	 */
 	public function join($id = null)
@@ -98,8 +101,10 @@ class LobbiesController extends AppController
 		return $this->redirect(['action' => 'view', $id]);
 	}
 
-	//Create new Lobby and redirect to it
+
 	/**
+	 * 	Create new Lobby and redirect to user it
+	 * 
 	 * @return \Cake\Http\Response|null
 	 */
 	public function add()
@@ -127,8 +132,10 @@ class LobbiesController extends AppController
 	}
 
 
-	//Leave lobby
+	
 	/**
+	 * Remove's a user a from the lobby they have joined
+	 * 
 	 * @return \Cake\Http\Response|null
 	 */
 	public function leave()
@@ -142,6 +149,8 @@ class LobbiesController extends AppController
 
 
 	/**
+	 * Starts a checkers game from a full lobby
+	 * 
 	 * @param null $id
 	 * @return \Cake\Http\Response|null
 	 */
@@ -159,9 +168,11 @@ class LobbiesController extends AppController
 	}
 
 
-	//Returns the player2s name and lobby status
-	//from ajax request in lobby view.
+
 	/**
+	 * Ajax post request for updated lobby information.
+	 * 
+	 * Returns the player2's name and lobby status as JSON
 	 * @return \Cake\Http\Response|null
 	 */
 	public function refreshLobby()

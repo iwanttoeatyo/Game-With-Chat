@@ -5,7 +5,7 @@ use App\Model\Entity\PlayerStatus;
 use Cake\Core\Configure;
 
 /**
- * Users Controller
+ * Controller for login/logout and user registration
  *
  * @property \App\Model\Table\UsersTable $Users
  * @property \App\Model\Table\PlayerStatusesTable $PlayerStatuses
@@ -13,16 +13,30 @@ use Cake\Core\Configure;
  */
 class UsersController extends AppController
 {
+	
+	/**
+	 * Initialization hook method.
+	 *
+	 * Loads Player components
+	 *
+	 * @return void
+	 */
 	public function initialize()
 	{
 		parent::initialize();
 		$this->loadComponent('Player');
 	}
 
+	/**
+	 * Displays Login page and redirects logged in users to Home/index
+	 * 
+	 * Displays Template/Users/login.ctp
+	 * @return \Cake\Http\Response|null
+	 */
 	public function login()
 	{
 		if ($this->request->is('post')) {
-			// Important: Use login() without arguments! See warning below.
+			//Authenticate this user
 			$user = $this->Auth->identify();
 			if ($user) {
 				$this->Auth->setUser($user);
@@ -32,16 +46,27 @@ class UsersController extends AppController
 				__('Incorrect username or password')
 			);
 		}
+		//set page title
 		$title = 'Login | ' . Configure::read('App.Name');
 		$this->set(compact('title'));
 	}
 
+	/**
+	 * Logs Users out and redirects to Home/index
+	 * 
+	 * @return \Cake\Http\Response|null
+	 */
 	public function logout()
 	{
 		return $this->redirect($this->Auth->logout());
 	}
 
-	//Register page.
+	/**
+	 * Display Registration page
+	 * 
+	 * Displays Template/Users/add.ctp
+	 * @return \Cake\Http\Response|null
+	 */
 	public function add()
 	{
 		$user = $this->Users->newEntity();
