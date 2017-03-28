@@ -15,7 +15,8 @@ use Cake\ORM\Entity;
 class PlayerStatus extends Entity
 {
 	/**
-	 * 	A player is set offline when they disconnect from the websocket
+	 * 	A player is set offline when they disconnect from the websocket.
+	 *  Only offline players are not listed in the lobby list.
 	 */
 	const Offline = 0;
 	/**

@@ -6,7 +6,7 @@ use Cake\Controller\Component;
 use Cake\ORM\TableRegistry;
 
 /**
- * Cache component
+ * Business Logic related to online Users
  *
  * @property \App\Model\Table\UsersTable $Users
  * @property \App\Model\Table\ScoresTable $Scores

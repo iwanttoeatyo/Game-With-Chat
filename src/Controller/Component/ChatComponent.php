@@ -6,7 +6,9 @@ use Cake\ORM\TableRegistry;
 use DateTime;
 
 /**
- * Business logic related to Chat and Messages
+ * Business logic related to Chat and Messages.
+ * 
+ * 
  * Creates new Chats and inserts and select Messages
  *
  * @property \App\Model\Table\ChatsTable $Chats

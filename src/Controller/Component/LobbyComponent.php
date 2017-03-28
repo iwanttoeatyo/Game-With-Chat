@@ -7,7 +7,8 @@ use Cake\Controller\Component;
 use Cake\ORM\TableRegistry;
 
 /**
- * Lobby component
+ * Business logic component for LobbiesController
+ *
  *
  * @property \App\Model\Table\UsersTable $Users
  * @property \App\Model\Table\LobbiesTable $Lobbies

@@ -6,8 +6,10 @@ use Cake\Controller\Component;
 use Cake\ORM\TableRegistry;
 
 /**
- * Business Logic relating to Games.
- * CRUD operations and logic pertaining to game winning and forfeiting
+ * Business logic component for GamesController
+ * 
+ * 
+ * Contains CRUD operations and logic pertaining to game winning and forfeiting
  * 
  * @property \App\Model\Table\GamesTable $Games
  * @property \App\Model\Table\ScoresTable $Scores

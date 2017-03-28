@@ -2,9 +2,12 @@
 namespace App\Controller;
 
 use Cake\Core\Configure;
+use Cake\Network\Exception\NotFoundException;
 
 /**
  * Controller to display a checker's game.
+ * 
+ * 
  * Contains post request to forfeit game.
  * Contains ajax requests to update and get a game's game state.
  *
@@ -39,11 +42,16 @@ class GamesController extends AppController
 	 * Renders Template/Element/chat.ctp
 	 * @param int|null $id
 	 * @return \Cake\Http\Response|null
+	 * @throws \Cake\Network\Exception\NotFoundException When the game could not be found by id
 	 */
 	public function view($id = null)
 	{
-		$game = $this->Game->getGame($id);
-
+		try{
+			$game = $this->Game->getGame($id);
+		}catch (\Exception $e){
+			throw new NotFoundException(__('Game not found'));
+		}
+		
 		//If game is ended redirect to home page
 		if ($this->Game->isGameEnded($id))
 			return $this->redirect(['controller' => 'Home', 'action' => 'index']);
@@ -113,11 +121,12 @@ class GamesController extends AppController
 
 
 	/**
-	 * Ajax Get Request to get the game_state of the game
+	 * Ajax Get Request to get the game_state of the game.
+	 * 
+	 * Expects an id as POST data<br>
+	 * Returns JSON object<br>
+	 * 
 	 * @see \App\Model\Entity\Game
-	 *
-	 * Expects a $game_id as POST data 'id'.
-	 * Returns JSON object
 	 * @return \Cake\Http\Response|null
 	 */
 	public function getGameState()
@@ -138,10 +147,9 @@ class GamesController extends AppController
 	 *
 	 * Updates the game_state and checks if there is a winner.
 	 * Games is ended if there was a winner.
-	 * Returns this winner info as JSON if there was a winner
+	 * Returns winner info as JSON if there was a winner.
 	 *
 	 * @see \App\Model\Entity\Game
-	 * Returns JSON object
 	 * @return \Cake\Http\Response|null
 	 */
 	public function updateGameState()

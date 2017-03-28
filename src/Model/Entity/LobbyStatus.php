@@ -27,7 +27,8 @@ class LobbyStatus extends Entity
 	 */
 	const Started = 2;
 	/**
-	 * A lobby is closed after player1 leaves or the game ends by forfeit or win
+	 * A lobby is closed after player1 leaves or the game ends by forfeit or win.
+	 * Only closed lobbies are not listed in the lobby list
 	 */
 	const Closed = 3;
     /**

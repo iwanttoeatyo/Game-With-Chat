@@ -14,7 +14,14 @@ use Cake\ORM\Entity;
  */
 class GameStatus extends Entity
 {
+	/**
+	 * A game is active after a lobby is started.
+	 * Active games are listed in the lobby list
+	 */
 	const Active = 0;
+	/**
+	 *  A game is ended when a player forfeits or wins
+	 */
 	const Ended = 1;
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

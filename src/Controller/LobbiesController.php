@@ -37,9 +37,9 @@ class LobbiesController extends AppController
 	/**
 	 * Displays a lobby view
 	 *
-	 * Displays Template/Lobbies/view.ctp
+	 * Displays Template/Lobbies/view.ctp<br>
 	 * Renders Template/Element/chat.ctp
-	 * @param null $id
+	 * @param int|null $id
 	 * @return \Cake\Http\Response
 	 * @throws \Cake\Network\Exception\NotFoundException When the lobby could not be found by id
 	 */
@@ -82,7 +82,11 @@ class LobbiesController extends AppController
 	}
 
 	/**
-	 * @param int|void $id Lobby id
+	 * Tries to add this user to the lobby given by the id
+	 * If lobby is open and unlocked user is added. If user is not
+	 * add they are redirected to Home/index
+	 * 
+	 * @param int|null $id 
 	 * @return \Cake\Http\Response|null
 	 */
 	public function join($id = null)
@@ -90,12 +94,11 @@ class LobbiesController extends AppController
 		if ($this->request->is('post')) {
 			$user_id = $this->Auth->user('id');
 			if (empty($user_id))
-				//TODO add notification can only watch
+
 				return $this->redirect(['action' => 'view', $id]);
 			if ($this->Lobby->tryToAddPlayer2ToLobby($user_id, $id))
 				return $this->redirect(['action' => 'view', $id]);
 			else
-				//TODO add notification cant join lobby
 				return $this->redirect(['controller' => 'Home', 'action' => 'index']);
 		}
 		return $this->redirect(['action' => 'view', $id]);

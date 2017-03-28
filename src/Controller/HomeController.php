@@ -7,6 +7,8 @@ use Cake\Core\Configure;
 
 /**
  * Controller to display homepage.
+ * 
+ * 
  * Contains ajax calls to request lobby and player lists. As well
  * lobby and player info.
  * 
@@ -34,7 +36,7 @@ class HomeController extends AppController
 	/**
 	 * Display homepage, with global chat and players/lobby lists.
 	 * 
-	 * Displays Template/Home/index.ctp
+	 * Displays Template/Home/index.ctp<br>
 	 * Renders Template/Element/chat.ctp
 	 * @return \Cake\Network\Response|null
 	 */
