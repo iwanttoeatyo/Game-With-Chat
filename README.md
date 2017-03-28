@@ -1,4 +1,5 @@
 # Game-With-Chat #
+## Link to github https://github.com/mich4xD/Game-With-Chat
 ## You can find it at  https://urgame.me/  
 ### (Multiplayer online checkers using WebSockets and CakePHP 3)  
 This project was created for CS372 at the University of Regina.  
@@ -16,7 +17,7 @@ Full CakePHP installation tutorial at https://book.cakephp.org/3.0/en/installati
 ### Install these first
 Install PHP 7.0  
 Install MySQL  
-Setup a webserver like Apache or nginx  (Not required for local server. CakePHP has built in web server)
+Setup a webserver like Apache or nginx  (Not required for local server. CakePHP has built in web server)  
 On Windows you can just install WAMP with PHP 7  
 
 ### Setup
@@ -25,15 +26,15 @@ Setup a MySQL database called app
 run the sql in [config/schema/urgame.sql](config/schema/urgame.sql) in the new app database
 
 Checkout this repository and run composer in the main directory.  
-Update composer dependencies. Composer should download all necessary dependencies
+Update composer dependencies. Composer should download all necessary dependencies  
 run `composer self-update`  
 run `composer update`  
 
 rename the file in [config/app.default.php ](config/app.default.php) to app.php
 Modify the file to connect to your new database 'app' with the correct username and password
 
-To Run the websocket server with apache or nginx you will need to do a https/ssl proxy through the web server.  
-Example nginx file located in [config/nginx/game-with-chat](config/nginx/game-with-chat) This file goes in /etc/nginx/site-available/ 
+To Run the websocket server with apache or nginx you will need to do a https/ssl proxy through the web server.   
+Example nginx file located in [config/nginx/game-with-chat](config/nginx/game-with-chat) This file goes in /etc/nginx/site-available/   
 Follow this guide for more information https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-16-04  
 
 To Run the websocket server locally you will need to modify webroot/js/socket.js  
@@ -45,5 +46,5 @@ run `bin/cake server`
 run `bin/cake WebSocket`   
 
 After running the server it should say the url the application is avaiable at.  
-It should be something like localhost:8080/  
+It should be something like built-in server is running in http://localhost:8765/
 
