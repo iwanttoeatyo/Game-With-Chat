@@ -86,6 +86,5 @@ CREATE TABLE Messages (
   message TEXT(65534) NULL,
   username VARCHAR(255) NOT NULL,
   FOREIGN KEY (chat_id) REFERENCES Chats(id),
-  FOREIGN KEY (username) REFERENCES Users(username),
   PRIMARY KEY (id)
 );
