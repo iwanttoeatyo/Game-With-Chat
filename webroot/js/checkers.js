@@ -1,5 +1,5 @@
 // gloabal variables
-var capturedPieces = new Array(3).fill(0);
+var capturedPieces = [0,0,0];
 var Board;
 var pieces = [];
 $(function () {
